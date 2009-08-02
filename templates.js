@@ -1,28 +1,70 @@
-var templates2 = [
+var templates1 = [
     {
         match: [
-            ['console.log("**", o.name); return o.name', 'x'],
-            ["console.log('++', o.hasOwnProperty('y')); return o.hasOwnProperty('y')", true],
+            ['return o.name', 'z'],
+            ["return true", true]
+        ],
+        body: 'return "<x>" + apply(o, c) + "</x>"'
+    },
+    {
+        match: [
+            ['return o.name', 'zz'],
+            ["return o.blabla", true]
+        ],
+        body: 'return "<x>" + apply(o, c) + "</x>"'
+    },
+    {
+        match: [
+            ['return o.name', 'z'],
+            ["return true", true]
+        ],
+        body: 'return "<x>" + apply(o, c) + "</x>"'
+    },
+    {
+        match: [
+            ['return o.name', 'y'],
+            ["return o.hasOwnProperty('z')", true],
+            ["return o.blabla", true],
+            ["return true", true]
+        ],
+        body: 'return "<x>" + apply(o, c) + "</x>"'
+    },
+    {
+        match: [
+            ['return o.name', 'x'],
+            ["return o.blabla", true],
+            ["return true", true]
+        ],
+        body: 'return "<y>" + apply(o, c) + "</y>"'
+    },
+    {
+        match: [
+            ['return o.name', 'x'],
+            ["return o.hasOwnProperty('y')", true],
             ["return o.hasOwnProperty('x')", true],
             ["return o.bla", true],
             ["return true", true]
         ],
         body: 'return "<y>" + apply(o, c) + "</y>"'
-    }
-];
-var templates1 = [
+    },
     {
         match: [
+            ['return o.name', 'x'],
+            ["return o.foo", true],
             ["return true", true]
         ],
         body: 'return "<y>" + apply(o, c) + "</y>"'
     },
     {
         match: [
-            ["return 1", true]
+            ['return o.name', 'x'],
+            ["return o.foofoo", true],
+            ["return true", true]
         ],
         body: 'return "<y>" + apply(o, c) + "</y>"'
     },
+//];
+//var templates2 = [
     {
         match: [
             ["return true", true],
