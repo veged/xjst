@@ -54,7 +54,7 @@
     }
 
     // Функция фильтрации шаблонов по подматчу
-    function filterTemplatesBySubmatch(templates, id, value, oValue) {
+    function filterTemplatesBySubmatch(templates, id, value) {
         var res = [];
         $.each(templates, function(ii, template){
             var m, i = 0, hasSubmatch = false;
@@ -62,12 +62,8 @@
                 var eqId = m[0].id == id;
                 hasSubmatch = hasSubmatch || eqId;
                 // оставляем те шаблоны, у которых есть такой подматч
-                // и он или равен текущему значению от объекта,
-                // или не равен неподходящему значению текущего подматча
-                if (eqId && (
-                        (m[1] == oValue) ||
-                        (m[1] == oValue && m[1] != value && value != oValue)
-                    )) res[res.length] = template;
+                // и он или равен текущему значению от объекта
+                if (eqId && m[1] == value) res[res.length] = template;
             }
             // если такого подматча в шаблоне нет -- всегда оставляем
             if (!hasSubmatch) res[res.length] = template;
@@ -78,28 +74,23 @@
 
     // Функция поиска среди шаблонов
     function match(o, c, templates) {
-        var res, ts = templates, t, i = 1, submatches = {eq: {}, neq: {}}, submatchesId;
+        var res, ts = templates, t, i = 1, submatches = {}, submatchesId;
         var viewTemplatesCount = 0; // DEBUG
         while (!res && (t = ts[ts.length - i])) { // итерируемся по шаблонам с конца, пока не найдём подошедший
             viewTemplatesCount++;
             var matched, m = t.match[0], j = 1;
             do { // итерируемся по подматчам, пока они все матчатся
                 var id = m[0].id,
-                    value = submatches.eq[id] || (submatches.eq[id] = m[0](o, c)); // запоминаем результаты подматчей
+                    value = submatches[id] || (submatches[id] = m[0](o, c)); // запоминаем результаты подматчей
                 matched = value == m[1];
 
-                if (!matched) { // запоминаем результаты неподошедших подматчей
-                    var n = {};
-                    n[id] = m[1];
-                    submatches.neq[$.param(n)] = '';
-                }
                 // на основании выполненных подматчей и неподошедших подматчей строим ключ,
                 // по которому будем хранить отфильтрованные шаблоны
-                var newSubmatchesId = objectId(submatches.eq) + '&&' + objectId(submatches.neq);
+                var newSubmatchesId = objectId(submatches);
 
                 // фильтруем шаблоны по подматчу
                 if (ts.length > 1) ts = templates.bySubmatches[newSubmatchesId] ||
-                    (templates.bySubmatches[newSubmatchesId] = filterTemplatesBySubmatch(ts, id, m[1], value));
+                    (templates.bySubmatches[newSubmatchesId] = filterTemplatesBySubmatch(ts, id, value));
 
                 // накапливаем и используем статистику неподошедших матчей
                 updateSubmatchStat(t, m, j, matched);
