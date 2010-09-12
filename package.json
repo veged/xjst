@@ -1,0 +1,18 @@
+{
+    "name" : "xjst",
+    "description" : "XSLT inspired JavaScript templates (with spices)",
+    "version" : "0.0.2",
+    "homepage": "http://github.com/veged/xjst",
+    "author" : "Sergey Berezhnoy <veged@mail.ru> (http://github.com/veged)",
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/veged/xjst.git"
+    },
+    "directories" : { "lib" : "./lib" },
+    "bin" : { "xjst" : "./bin/xjst" },
+    "dependencies" : {
+        "ometajs" : ">= 2.0.1"
+    },
+    "engines" : { "node" : ">=0.2" },
+    "licenses" : [ { "type" : "AS IS" } ]
+}
