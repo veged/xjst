@@ -19,7 +19,7 @@ fs.readFile('tests/bla.xjst', 'utf8', function(err, input){
             '--- compile:\n' +
             xjst.XJSTCompiler.matchAll(result.reverse(), 'topLevel') +
             '\n\n');
-        process.stdout.write('--- compile2:\n' + JSON.stringify(xjst.compile(result)) + '\n\n');
+        process.stdout.write('--- compile2:\n' + (xjst.compile(result)) + '\n\n');
     } catch (e) {
         e.errorPos != undefined &&
             sys.error(

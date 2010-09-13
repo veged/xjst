@@ -1,5 +1,5 @@
-a :: 1 -> b
-a -> b
-[c, d :: 'dd'] -> e
-[f :: 1, g :: 2] ->
-    (b = 1, b + 'bla')
+[parent :: 'block', name :: 'sub1'] ->
+    '<i>' + val + '</i>'
+
+[val > 3, name :: 'sub2', parent :: 'block'] ->
+    '<b>' + val + '</b>'
