@@ -48,7 +48,7 @@ exports.compile = function(templates) {
         if(p in ps) {
             if(typeof ps[p] == 'string') {
                 if(ps[p] == JSON.stringify(c)) {
-                    return dot(i, j + 1, ps);
+                    return doT(i, j + 1, ps);
                 } else {
                     return doT(i + 1, 0, ps);
                 }
@@ -56,13 +56,13 @@ exports.compile = function(templates) {
                  if(JSON.stringify(c) in ps[p]) {
                     return doT(i + 1, 0, ps);
                  } else {
-                    return 'if(p' + p + '==' + emit(c) + '){\n'
+                    return 'if(p' + p + '==' + emit(c) + '){\n' +
                         doT(i, j + 1, extendNew(ps, p, JSON.stringify(c))) + '}else{\n' +
                         doT(i + 1, 0, extendNew(ps, p, undefined, JSON.stringify(c))) + '}\n';
                  }
             }
         } else {
-            return 'var p' + p + '=' + emit(m[1]) + ';\n'
+            return 'var p' + p + '=' + emit(m[1]) + ';\n' +
                 doT(i, j, extendNew(ps, p, {}));
         }
     }

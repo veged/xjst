@@ -26,7 +26,7 @@ fs.readFile('tests/bla.xjst', 'utf8', function(err, input){
                 input.slice(0, e.errorPos) +
                 "\n--- Parse error ->" +
                 input.slice(e.errorPos) + '\n');
-        console.log('' + e);
+        console.log('error: ' + e);
         throw e
     }
 });
