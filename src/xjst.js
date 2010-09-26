@@ -57,6 +57,6 @@ exports.compile = function(templates) {
                 doTemplate(i, j, newPredicMemo(predicMemo, predicate, {}));
     }
 
-    return 'function(c){\n' + doTemplate(0, 0, {}) + '};';
+    return '(function(c){\n' + doTemplate(0, 0, {}) + '})';
 
 };

@@ -18,6 +18,7 @@ lib/xjst.js: src
 		; done
 
 tests: FORCE
-	node $@/bla.js $@/bla.xjst
+	#node $@/tests.js $@/bla.xjst
+	node $@/tests.js $@/menu.xjst
 
 .PHONY: all FORCE

@@ -121,7 +121,7 @@ ometa XJSTCompiler <: BSJSTranslator {
 
     template = [tMatch:m tBody:b] -> ('    if(' + m + ') return ' + b + ';'),
 
-    topLevel = template+:ts -> ('function(){\n' + ts.join('\n') +'\n}'),
+    topLevel = template+:ts -> ('(function(c){\n' + ts.join('\n') +'\n})'),
 
     topLevel2 = :ts -> XJSTCompiler.matchAll(ts.reverse(), 'topLevel2')
 
