@@ -1,7 +1,5 @@
 ometa XJSTParser <: BSJSParser {
 
-    special = (``::'' | ``->''):s -> [s, s] | ^special,
-
     exprs = "(" listOf(#expr, ','):as ")" -> as | expr:e -> [e],
 
     const = "string":s -> [#string, s] |
@@ -9,13 +7,15 @@ ometa XJSTParser <: BSJSParser {
 
     tBody = exprs,
 
-    subMatch = expr:e1 "::" const:c -> [e1, c] |
-        expr:e2 -> [e2, [#get, #true]],
+    subMatch = expr:e -> XJSTParser.match(e, #expr2submathc),
 
-    tMatch = "[" listOf(#subMatch, ','):ms "]" -> ms |
+    expr2submathc = [#binop '==' :e1 [#string :x]:c] -> [e1, c] |
+        :e2 -> [e2, [#get, #true]],
+
+    tMatch = listOf(#subMatch, ','):ms -> ms |
         subMatch:m -> [m],
 
-    template = tMatch:m "->" tBody:b -> [m, b],
+    template = tMatch:m spaces tBody:b -> [m, b],
 
     topLevel = template+:r '\n'* end -> XJSTParser._identify(r)
 
@@ -48,15 +48,15 @@ ometa XJSTBeautifier {
     postop :op jsTrans:x -> (x + op),
 
     subMatch = [:id jsTrans:m [#get #true]] -> m |
-        [:id jsTrans:e jsTrans:c] -> (e + ' :: ' + c),
+        [:id jsTrans:e jsTrans:c] -> (e + ' == ' + c),
 
     tMatch = [subMatch:m] -> m |
-        [subMatch+:ms] -> ('[' + ms.join(', ') + ']'),
+        [subMatch+:ms] -> ms.join(', '),
 
     tBody = [jsTrans:e] -> ('\n    ' + e) |
         [jsTrans+:es] -> (' (\n    ' + es.join(',\n    ') + ' )'),
 
-    template = [tMatch:m tBody:b] -> (m + ' ->' + b),
+    template = [tMatch:m tBody:b] -> (m + b),
 
     topLevel = template+:ts -> ts.join('\n\n')
 

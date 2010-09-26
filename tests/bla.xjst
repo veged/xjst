@@ -1,5 +1,5 @@
-[parent :: 'block', name :: 'sub1'] ->
+parent == 'block', name == 'sub1'
     '<i>' + val + '</i>'
 
-[val > 3, name :: 'sub2', parent :: 'block'] ->
+val > 3, name == 'sub2', parent == 'block'
     '<b>' + val + '</b>'
