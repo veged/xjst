@@ -18,6 +18,6 @@ lib/xjst.js: src
 		; done
 
 tests: FORCE
-	node $@/bla.js
+	node $@/bla.js $@/bla.xjst
 
 .PHONY: all FORCE

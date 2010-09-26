@@ -1,7 +1,7 @@
 var sys = require('sys'),
     fs = require('fs');
 
-fs.readFile('tests/bla.xjst', 'utf8', function(err, input){
+fs.readFile(process.argv[2], 'utf8', function(err, input){
     if (err) throw err;
     console.log(input);
     try {

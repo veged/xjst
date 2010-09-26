@@ -33,28 +33,74 @@ XJSTParser._identify = function(templates) {
 
 ometa XJSTBeautifier {
 
-    jsTrans = [:t apply(t):ans] -> ans,
+    trans = [:t apply(t):ans] -> ans,
+
+    curlyTrans = [#begin curlyTrans:r] -> r |
+        [#begin trans*:rs] -> ('{ ' + rs.join(';') + ' }') |
+        trans:r -> ('{ ' + r + ' }'),
+
+    nameString = :n ?(XJSTParser.matchAll(n, 'name')[1] == n) -> n,
+
+    this -> 'this',
+    break -> 'break',
+    continue -> 'continue',
 
     number :n -> n,
     string :s -> s.toProgramString(),
-    arr jsTrans*:xs -> ('[' + xs.join(', ') + ']'),
-    unop :op jsTrans:x -> (op + x),
-    getp jsTrans:fd jsTrans:x -> (x + '[' + fd + ']'),
+    arr trans*:xs -> ('[' + xs.join(', ') + ']'),
+    unop :op trans:x -> (op + x),
+    getp (
+            [#string nameString:n] -> ('.' + n) |
+            trans:fd -> ('[' + fd + ']')
+        ):p
+        trans:x -> (x + p),
     get :x -> x,
-    set jsTrans:lhs jsTrans:rhs -> (lhs + ' = ' + rhs),
-    mset jsTrans:lhs :op jsTrans:rhs -> (lhs + ' ' + op + '= ' + rhs),
-    binop :op jsTrans:x jsTrans:y -> (x + ' ' + op + ' ' + y),
-    preop :op jsTrans:x -> (op + x),
-    postop :op jsTrans:x -> (x + op),
+    set trans:lhs trans:rhs -> (lhs + ' = ' + rhs),
+    mset trans:lhs :op trans:rhs -> (lhs + ' ' + op + '= ' + rhs),
+    binop :op trans:x trans:y -> (x + ' ' + op + ' ' + y),
+    preop :op trans:x -> (op + x),
+    postop :op trans:x -> (x + op),
 
-    subMatch = [:id jsTrans:m [#get #true]] -> m |
-        [:id jsTrans:e jsTrans:c] -> (e + ' == ' + c),
+    return trans:x -> ('return ' + x),
+    with trans:x curlyTrans:s -> ('with(' + x + ')' + s),
+    if trans:cond curlyTrans:t curlyTrans:e -> ('if(' + cond + ')' + t + ' else ' + e),
+    condExpr trans:cond trans:t trans:e -> ('(' + cond + ' ? ' + t + ' : ' + e + ')'),
+    while trans:cond curlyTrans:body -> ('while(' + cond + ')' + body),
+    doWhile curlyTrans:body trans:cond -> ('do' + body + 'while(' + cond + ')'),
+    for trans:init trans:cond trans:upd
+    curlyTrans:body -> ('for(' + init + ';' + cond + ';' + upd + ')' + body),
+    forIn trans:x trans:arr curlyTrans:body -> ('for(' + x + ' in ' + arr + ')' + body),
+    begin trans:x end -> x,
+    begin (trans:x
+            ( (?(x[x.length - 1] == '}') | end) -> x
+                | empty -> (x + ';')
+            )
+        )*:xs -> ('{' + xs.join('') + '}'),
+    func :args curlyTrans:body -> ('(function (' + args.join(', ') + ')' + body + ')'),
+    call trans:fn trans*:args -> (fn + '(' + args.join(', ') + ')'),
+    send :msg trans:recv trans*:args -> (recv + '.' + msg + '(' + args.join(', ') + ')'),
+    new :cls trans*:args -> ('new ' + cls + '(' + args.join(', ') + ')'),
+    var :name trans:val -> ('var ' + name + '=' + val),
+    throw trans:x -> ('throw ' + x),
+    try curlyTrans:x :name curlyTrans:c curlyTrans:f -> ('try ' + x + 'catch(' + name + ')' + c + 'finally' + f),
+    json trans*:props -> ('{ ' + props.join(', ') + ' }'),
+    binding (
+            nameString |
+            :n2 -> n2.toProgramString()
+        ):name
+        trans:val -> (name + ': ' + val),
+    switch trans:x trans*:cases -> ('switch(' + x + '){' + cases.join(';') + '}'),
+    case trans:x trans:y -> ('case ' + x + ': '+ y),
+    default trans:y -> ('default: ' + y),
+
+    subMatch = [:id trans:m [#get #true]] -> m |
+        [:id trans:e trans:c] -> (e + ' == ' + c),
 
     tMatch = [subMatch:m] -> m |
         [subMatch+:ms] -> ms.join(', '),
 
-    tBody = [jsTrans:e] -> ('\n    ' + e) |
-        [jsTrans+:es] -> (' (\n    ' + es.join(',\n    ') + ' )'),
+    tBody = [trans:e] -> ('\n    ' + e) |
+        [trans+:es] -> (' (\n    ' + es.join(',\n    ') + ' )'),
 
     template = [tMatch:m tBody:b] -> (m + b),
 
