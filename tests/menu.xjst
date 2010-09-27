@@ -36,3 +36,6 @@ c.name == 'menu item content', c.val.id == c.page.val.id
     '<span>' +
         c.val.text +
     '</span>'
+
+c.bla1 == 'bla1', c.bla2 == 'bla2'
+    'bla'
