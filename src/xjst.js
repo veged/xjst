@@ -22,16 +22,25 @@ exports.compile = function(templates) {
         var r = {};
         for(var i in o) r[i] = o[i];
 
-        arguments.length == 4 ?
-            (r[k][vv] = true) :
-            (r[k] = v);
+        if(arguments.length == 4) {
+            var rk = {};
+            for(var i in rk) rk[i] = r[k][i];
+            rk[vv] = true;
+            r[k] = rk;
+        } else {
+            r[k] = v;
+        }
 
         return r;
     }
 
+    function dumpCtx() {
+        return '/*' + JSON.stringify(arguments) + '*/\n';
+    }
+
     function doTemplate(i, j, predicMemo) {
         var template = templates[i];
-        if(!template) return " throw true ";
+        if(!template) return ' throw true ';
 
         var subMatch = template[0][j];
         if(!subMatch) return 'return ' + XJSTCompiler.match(template[1], 'tBody') + ';';

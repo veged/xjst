@@ -17,18 +17,27 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
         process.stdout.write('--- compile:\n' + compileFn + '\n\n');
         compileFn = process.compile(compileFn, 'compile');
 
-        var compileFn2 = xjst.compile(result.reverse());
+        var compileFn2 = xjst.compile(result);
         process.stdout.write('--- compile2:\n' + compileFn2 + '\n\n');
         compileFn2 = process.compile(compileFn2, 'compile2');
 
         process.stdout.write('\n-=-=-=-=-=-=-=-=-=-=-\n\n');
         fs.readFile(process.argv[2] + '.json', 'utf8', function(err, input){
             if (err) throw err;
+            input = JSON.parse(input);
+
             process.stdout.write(
                 compileFn({
                     apply: compileFn,
                     name: 'page',
-                    val: JSON.parse(input) }) +
+                    val: input }) +
+                '\n\n');
+
+            process.stdout.write(
+                compileFn({
+                    apply: compileFn2,
+                    name: 'page',
+                    val: input }) +
                 '\n\n');
         });
 
