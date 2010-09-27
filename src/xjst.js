@@ -59,6 +59,16 @@ exports.compile = function(templates) {
         var subMatch = template[0][j];
         if(!subMatch) return { comment: dumpCtx(i, j, predicMemo), tBody: template[1] };
 
+        var jj = j, s;
+        while(s = template[0][++jj]) {
+            var predicate = s[0],
+                predicateConst = s[2];
+
+            if(predicate in predicMemo)
+                if(predicMemo[predicate] != JSON.stringify(predicateConst))
+                    return doTemplate(i + 1, 0, predicMemo);
+        }
+
         var predicate = subMatch[0],
             predicateConst = subMatch[2];
 
