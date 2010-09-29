@@ -1,5 +1,5 @@
 c.name == 'page'
-    '<html>' +
+    return '<html>' +
         '<head></head>' +
         '<body>' +
             c.apply({ apply: c.apply, page: c, name: 'menu', val: c.val.menu }) +
@@ -7,7 +7,7 @@ c.name == 'page'
     '</html>'
 
 c.name == 'menu'
-    '<ul class="menu">' +
+    return '<ul class="menu">' +
         c.val.map(function(v){
             return c.apply({
                 apply: c.apply,
@@ -17,8 +17,8 @@ c.name == 'menu'
                 val: v }) }).join('') +
     '</ul>'
 
-c.parent == 'menu', c.name == 'item'
-    '<li>' +
+c.parent == 'menu' && c.name == 'item'
+    return '<li>' +
         c.apply({
             'bla-bla': c['bla-bla'],
             apply: c.apply,
@@ -28,14 +28,14 @@ c.parent == 'menu', c.name == 'item'
     '</li>'
 
 c.name == 'menu item content'
-    '<a href="' + c.val.link + '">' +
+    return '<a href="' + c.val.link + '">' +
         c.val.text +
     '</a>'
 
-c.name == 'menu item content', c.val.id == c.page.val.id
-    '<span>' +
+c.name == 'menu item content' && c.val.id == c.page.val.id
+    return '<span>' +
         c.val.text +
     '</span>'
 
-c.bla1 == 'bla1', c.bla2 == 'bla2'
-    'bla'
+c.bla1 == 'bla1' && c.bla2 == 'bla2'
+    return 'bla'

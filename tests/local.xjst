@@ -1,0 +1,13 @@
+c.name == 'bla' && a == 'b'
+    local(c = 'x', b = 'b', z = 'z') {
+
+        if(true) {
+
+            if(b = '1') {
+
+                'bla'
+            }
+
+        }
+
+    }

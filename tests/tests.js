@@ -23,7 +23,7 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
 
         process.stdout.write('\n-=-=-=-=-=-=-=-=-=-=-\n\n');
         fs.readFile(process.argv[2] + '.json', 'utf8', function(err, input){
-            if (err) throw err;
+            if (err) return;
             input = JSON.parse(input);
 
             process.stdout.write(

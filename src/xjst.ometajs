@@ -1,25 +1,57 @@
 ometa XJSTParser <: BSJSParser {
 
-    exprs = "(" listOf(#expr, ','):as ")" -> as | expr:e -> [e],
+    const = [#string :s] | [#number :n],
 
-    const = "string":s -> [#string, s] |
-            "number":n -> [#number, n],
+    isKeyword :x = ?(BSJSParser._isKeyword(x) || x == 'local'),
 
-    tBody = exprs,
+    stmt = "local" "(" expr:c ")" stmt:t -> XJSTParser.match([#local, c, t], 'local')
+        | ^stmt,
 
-    subMatch = expr:e -> XJSTParser.match(e, #expr2submathc),
+    local = [#local localExprs:es :t] -> {
+            var id = XJSTParser._getLocalId(), res = [#begin];
+            es.forEach(function(x){ res.push.apply(res, x[0]) });
+            res.push(t);
+            es.reverse().forEach(function(x){ res.push.apply(res, x[1]) });
+            res;
+        },
 
-    expr2submathc = [#binop '==' :e1 [#string :x]:c] -> [e1, c] |
+    localExprs = localExpr:e1 -> [e1] |
+        [#binop ',' localExprs:es localExpr:e2] -> { es.push(e2); es },
+
+    localExpr = [#set [#get :n] :c]:bla -> {
+        var id = XJSTParser._getLocalId();
+        [
+            [
+                [#begin, [#var, '__v' + id, [#get, n]]],
+                [#set, [#get, n], c]
+            ],
+            [
+                [#set, [#get, n], [#get, '__v' + id]]
+            ]
+        ]
+    },
+
+    tBody = stmt,
+
+    subMatch = [#binop '==' :e1 const:c] -> [e1, c] |
         :e2 -> [e2, [#get, #true]],
 
-    tMatch = listOf(#subMatch, ','):ms -> ms |
-        subMatch:m -> [m],
+    expr2match = [#binop '&&' expr2match:ms subMatch:m1] -> { ms.push(m1); ms} |
+        subMatch:m2 -> [m2] ,
+
+    tMatch = expr:ms -> XJSTParser.match(ms, #expr2match),
 
     template = tMatch:m spaces tBody:b -> [m, b],
 
     topLevel = template+:r '\n'* end -> XJSTParser._identify(r)
 
 }
+
+XJSTParser._getLocalIdCounter = 0;
+XJSTParser._getLocalId = function() {
+    return this._getLocalIdCounter++;
+};
+
 
 XJSTParser._identify = function(templates) {
     var predicates = new Identifier();
@@ -97,10 +129,9 @@ ometa XJSTBeautifier {
         [:id trans:e trans:c] -> (e + ' == ' + c),
 
     tMatch = [subMatch:m] -> m |
-        [subMatch+:ms] -> ms.join(', '),
+        [subMatch+:ms] -> ms.join(' && '),
 
-    tBody = [trans:e] -> ('\n    ' + e) |
-        [trans+:es] -> (' (\n    ' + es.join(',\n    ') + ' )'),
+    tBody = trans:e -> ('\n    ' + e),
 
     template = [tMatch:m tBody:b] -> (m + b),
 
@@ -116,10 +147,9 @@ ometa XJSTCompiler <: BSJSTranslator {
     tMatch = [subMatch:m] -> m |
         [subMatch+:ms] -> ms.join(' && '),
 
-    tBody = [trans:e] -> e |
-        [trans+:es] -> (' (\n        ' + es.join(',\n        ') + ' )'),
+    tBody = trans:e -> e,
 
-    template = [tMatch:m tBody:b] -> ('    if(' + m + ') return ' + b + ';'),
+    template = [tMatch:m tBody:b] -> ('    if(' + m + ') ' + b + ';'),
 
     topLevel = template+:ts -> ('(function(c){\n' + ts.join('\n') +'\n})'),
 

@@ -52,7 +52,7 @@ exports.compile = function(templates) {
         var subMatch = template[0][j];
         if(!subMatch) return {
             //comment: JSON.stringify([i, j, predicMemo]),
-            exprs: template[1] };
+            stmt: template[1] };
 
         var jj = j, s;
         while(s = template[0][++jj]) {
@@ -121,7 +121,7 @@ exports.compile = function(templates) {
                 'switch(' + XJSTCompiler.match(o['switch'], 'trans') + ') {\n' +
                     o.cases.map(function(c){
                         return 'case ' + XJSTCompiler.match(c[0], 'trans') + ':\n' +
-                            serialize(c[1], tails) + ';'
+                            serialize(c[1], tails) + '; break;'
                         }).join('\n') +
                     'default: ' + serialize(o['default'], tails) +
                     '}\n' :
