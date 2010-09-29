@@ -17,9 +17,9 @@ lib/xjst.js: src
 			cat $</$$i >> $@ \
 		; done
 
-tests: FORCE
-	#node $@/tests.js $@/bla.xjst
-	node $@/tests.js $@/menu.xjst
-	node $@/tests.js $@/merge.xjst
+tests: $(subst .xjst,,$(wildcard tests/*.xjst))
+
+tests/%:
+	node tests/tests.js tests/$*.xjst
 
 .PHONY: all FORCE
