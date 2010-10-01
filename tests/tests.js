@@ -27,17 +27,11 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
             input = JSON.parse(input);
 
             process.stdout.write(
-                compileFn({
-                    apply: compileFn,
-                    name: 'page',
-                    val: input }) +
+                compileFn(input) +
                 '\n\n');
 
             process.stdout.write(
-                compileFn({
-                    apply: compileFn2,
-                    name: 'page',
-                    val: input }) +
+                compileFn2(input) +
                 '\n\n');
         });
 

@@ -18,18 +18,49 @@ ometa XJSTParser <: BSJSParser {
     localExprs = localExpr:e1 -> [e1] |
         [#binop ',' localExprs:es localExpr:e2] -> { es.push(e2); es },
 
-    localExpr = [#set [#get :n] :c]:bla -> {
-        var id = XJSTParser._getLocalId();
-        [
+    localExpr = [#set [#get :n]:p :v] -> {
+            var id = XJSTParser._getLocalId();
             [
-                [#begin, [#var, '__v' + id, [#get, n]]],
-                [#set, [#get, n], c]
-            ],
-            [
-                [#set, [#get, n], [#get, '__v' + id]]
+                [
+                    [#var, ['__v' + id, p]],
+                    [#set, [#get, n], v]
+                ],
+                [
+                    [#set, [#get, n], [#get, '__v' + id]]
+                ]
             ]
-        ]
-    },
+        } |
+        [#set [#getp const:k :o]:p :v] -> {
+            var id = XJSTParser._getLocalId(),
+                vTree = [#getp, k, [#get, '__o' + id]];
+            [
+                [
+                    [#var,
+                        ['__o' + id, o],
+                        ['__v' + id, vTree]],
+                    [#set, vTree, v]
+                ],
+                [
+                    [#set, vTree, [#get, '__v' + id]]
+                ]
+            ]
+        } |
+        [#set [#getp :k :o]:p :v] -> {
+            var id = XJSTParser._getLocalId(),
+                vTree = [#getp, [#get, '__k' + id], [#get, '__o' + id]];
+            [
+                [
+                    [#var,
+                        ['__o' + id, o],
+                        ['__k' + id, k],
+                        ['__v' + id, vTree]],
+                    [#set, vTree, v]
+                ],
+                [
+                    [#set, vTree, [#get, '__v' + id]]
+                ]
+            ]
+        },
 
     tBody = stmt,
 
@@ -112,7 +143,7 @@ ometa XJSTBeautifier {
     call trans:fn trans*:args -> (fn + '(' + args.join(', ') + ')'),
     send :msg trans:recv trans*:args -> (recv + '.' + msg + '(' + args.join(', ') + ')'),
     new :cls trans*:args -> ('new ' + cls + '(' + args.join(', ') + ')'),
-    var :name trans:val -> ('var ' + name + '=' + val),
+    var ([:n trans:v] -> (n + ' = ' + v))+:vs -> ('var ' + vs.join(',')),
     throw trans:x -> ('throw ' + x),
     try curlyTrans:x :name curlyTrans:c curlyTrans:f -> ('try ' + x + 'catch(' + name + ')' + c + 'finally' + f),
     json trans*:props -> ('{ ' + props.join(', ') + ' }'),
@@ -149,7 +180,7 @@ ometa XJSTCompiler <: BSJSTranslator {
 
     tBody = trans:e -> e,
 
-    template = [tMatch:m tBody:b] -> ('    if(' + m + ') ' + b + ';'),
+    template = [tMatch:m tBody:b] -> ('    if(' + m + ') {' + b + ';return}'),
 
     topLevel = template+:ts -> ('(function(c){\n' + ts.join('\n') +'\n})'),
 

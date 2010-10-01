@@ -1,41 +1,44 @@
-c.name == 'page'
-    return '<html>' +
-        '<head></head>' +
-        '<body>' +
-            c.apply({ apply: c.apply, page: c, name: 'menu', val: c.val.menu }) +
-        '</body>' +
-    '</html>'
+c.name == 'page' {
+    c.buf.push(
+        '<html>',
+            '<head></head>',
+            '<body>');
+                local(c.page = c, c.name = 'menu', c.val = c.val.menu) c.apply(c);
+    c.buf.push(
+            '</body>',
+        '</html>'); }
 
-c.name == 'menu'
-    return '<ul class="menu">' +
-        c.val.map(function(v){
-            return c.apply({
-                apply: c.apply,
-                page: c.page,
-                parent: c.name,
-                name: 'item',
-                val: v }) }).join('') +
-    '</ul>'
+c.name == 'menu' {
+    c.buf.push('<ul class="menu">');
+    for(var i = 0, l = c.val.length; i < l; i++)
+        local(c.parent = c.name, c.name = 'item', c.val = c.val[i]) c.apply(c);
+    c.buf.push('</ul>'); }
 
-c.parent == 'menu' && c.name == 'item'
-    return '<li>' +
-        c.apply({
-            'bla-bla': c['bla-bla'],
-            apply: c.apply,
-            page: c.page,
-            name: 'menu item content',
-            val: c.val }) +
-    '</li>'
+c.parent == 'menu' && c.name == 'item' {
+    c.buf.push('<li>');
+        local(c.mode1 = 'menu item content') {
+            c.apply(c);
+        }
+    c.buf.push('</li>'); }
 
-c.name == 'menu item content'
-    return '<a href="' + c.val.link + '">' +
-        c.val.text +
-    '</a>'
+c.mode1 == 'menu item content' {
+    c.buf.push(
+        '<a href="' + c.val.link + '">',
+            c.val.text,
+        '</a>') }
 
-c.name == 'menu item content' && c.val.id == c.page.val.id
-    return '<span>' +
-        c.val.text +
-    '</span>'
+c.mode1 == 'menu item content' && c.val.id == c.page.id {
+    c.buf.push(
+        '<span>',
+            c.val.text,
+        '</span>') }
 
-c.bla1 == 'bla1' && c.bla2 == 'bla2'
-    return 'bla'
+!c.__start {
+    var buf = [];
+    local(
+        c.__start = true,
+        c.apply = arguments.callee,
+        c.buf = buf,
+        c.name = 'page',
+        c.val = c) c.apply(c);
+    return buf.join(''); }

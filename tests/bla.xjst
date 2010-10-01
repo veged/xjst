@@ -3,3 +3,10 @@ parent == 'block' && name == 'sub1'
 
 val > 3 && name == 'sub2' && parent == 'block'
     return '<b>' + val + '</b>'
+
+
+c.name == 'l-head'
+    return 'bla'
+
+c.name == 'l-head'
+    return 'alb'

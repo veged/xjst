@@ -123,11 +123,11 @@ exports.compile = function(templates) {
                         return 'case ' + XJSTCompiler.match(c[0], 'trans') + ':\n' +
                             serialize(c[1], tails) + '; break;'
                         }).join('\n') +
-                    'default: ' + serialize(o['default'], tails) +
+                    'default: ' + serialize(o['default'], tails) + '; break;' +
                     '}\n' :
                 o.exprs ?
                     'return ' + XJSTCompiler.match(o.exprs, 'tBody') :
-                    XJSTCompiler.match(o.stmt, 'trans'));
+                    XJSTCompiler.match(o.stmt, 'trans')) + ';return;';
     }
 
     function shiftTails(tails) {

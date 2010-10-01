@@ -1,9 +1,9 @@
 c.name == 'bla' && a == 'b'
-    local(c = 'x', b = 'b', z = 'z') {
+    local(f()[g()] = 'xx', x.x = 1, x[0] = '2', c = 'x', b = 'b', z = 'z') {
 
         if(true) {
 
-            if(b = '1') {
+            local(b = '1') {
 
                 'bla'
             }
