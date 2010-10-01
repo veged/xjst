@@ -26,13 +26,17 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
             if (err) return;
             input = JSON.parse(input);
 
-            process.stdout.write(
-                compileFn(input) +
-                '\n\n');
+            try {
+                process.stdout.write(
+                    compileFn(input) +
+                    '\n\n');
 
-            process.stdout.write(
-                compileFn2(input) +
-                '\n\n');
+                process.stdout.write(
+                    compileFn2(input) +
+                    '\n\n');
+            } catch(e) {
+                console.log(e);
+            }
         });
 
     } catch (e) {

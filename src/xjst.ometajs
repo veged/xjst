@@ -64,8 +64,9 @@ ometa XJSTParser <: BSJSParser {
 
     tBody = stmt,
 
-    subMatch = [#binop '==' :e1 const:c] -> [e1, c] |
-        :e2 -> [e2, [#get, #true]],
+    subMatch = [#binop '===' :e1 const:c] -> [e1, c] |
+        [#binop '===' const:c :e2] -> [e2, c] |
+        :e3 -> [[#unop, '!', e3], [#get, #false]],
 
     expr2match = [#binop '&&' expr2match:ms subMatch:m1] -> { ms.push(m1); ms} |
         subMatch:m2 -> [m2] ,
@@ -173,7 +174,7 @@ ometa XJSTBeautifier {
 ometa XJSTCompiler <: BSJSTranslator {
 
     subMatch = [:id trans:m [#get #true]] -> m |
-        [:id trans:e trans:c] -> (e + ' == ' + c),
+        [:id trans:e trans:c] -> (e + ' === ' + c),
 
     tMatch = [subMatch:m] -> m |
         [subMatch+:ms] -> ms.join(' && '),

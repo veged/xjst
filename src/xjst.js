@@ -115,19 +115,37 @@ exports.compile = function(templates) {
             return 'break l' + o.id + ';';
         }
 
-        return (o.comment? '/*' + o.comment + '*/\n' : '') +
-            (o.id? '/*' + o.id + '*/' : '') +
-            (o['switch'] ?
-                'switch(' + XJSTCompiler.match(o['switch'], 'trans') + ') {\n' +
+        var res = '';
+
+        o.comment && (res += '/*' + o.comment + '*/\n');
+        o.id && (res += '/*' + o.id + '*/');
+
+        if(o['switch']) {
+            if(o.cases.length == 1) {
+                var c = o.cases[0];
+                res += 'if(' +
+                    XJSTCompiler.match(o['switch'], 'trans') +
+                    ' === ' +
+                    XJSTCompiler.match(c[0], 'trans') + ') {\n' +
+                        serialize(c[1], tails) +
+                    '} else {\n' +
+                        serialize(o['default'], tails) +
+                    '}';
+            } else {
+                res += 'switch(' + XJSTCompiler.match(o['switch'], 'trans') + ') {\n' +
                     o.cases.map(function(c){
                         return 'case ' + XJSTCompiler.match(c[0], 'trans') + ':\n' +
                             serialize(c[1], tails) + '; break;'
                         }).join('\n') +
-                    'default: ' + serialize(o['default'], tails) + '; break;' +
-                    '}\n' :
-                o.exprs ?
-                    'return ' + XJSTCompiler.match(o.exprs, 'tBody') :
-                    XJSTCompiler.match(o.stmt, 'trans')) + ';return;';
+                    'default: ' + serialize(o['default'], tails) +
+                    '}\n';
+            }
+        } else {
+            res += o.exprs ?
+                'return ' + XJSTCompiler.match(o.exprs, 'tBody') :
+                XJSTCompiler.match(o.stmt, 'trans') + ';return;';
+        }
+        return res;
     }
 
     function shiftTails(tails) {

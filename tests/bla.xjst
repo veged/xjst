@@ -1,12 +1,12 @@
-parent == 'block' && name == 'sub1'
+parent === 'block' && name === 'sub1'
     return '<i>' + val + '</i>'
 
-val > 3 && name == 'sub2' && parent == 'block'
+val > 3 && name === 'sub2' && parent === 'block'
     return '<b>' + val + '</b>'
 
 
-c.name == 'l-head'
+c.name === 'l-head'
     return 'bla'
 
-c.name == 'l-head'
+c.name === 'l-head'
     return 'alb'

@@ -1,0 +1,28 @@
+true {
+    console.log(c);
+    return 'true'; }
+
+c.x {
+    console.log(c);
+    return 'c.x' }
+
+c.x == 'x' {
+    console.log(c);
+    return "c.x == 'x'" }
+
+c.x === 'x' {
+    console.log(c);
+    return "c.x === 'x'" }
+
+c.x === 3 {
+    console.log(c);
+    return 'c.x === 3' }
+
+c.length {
+    console.log('vvvvvvvvv');
+    console.log(c);
+    for(var i = c.length, a; a = c[--i];) {
+        console.log(arguments.callee(a));
+    }
+    return '^^^^^^^';
+}
