@@ -19,7 +19,9 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
 
         var compileFn2 = xjst.compile(result);
         process.stdout.write('--- compile2:\n' + compileFn2 + '\n\n');
-        compileFn2 = process.compile(compileFn2, 'compile2');
+        try {
+            compileFn2 = process.compile(compileFn2, 'compile2');
+        } catch(e) { console.log(e) }
 
         process.stdout.write('\n-=-=-=-=-=-=-=-=-=-=-\n\n');
         fs.readFile(process.argv[2] + '.json', 'utf8', function(err, input){

@@ -158,13 +158,15 @@ exports.compile = function(templates) {
     }
 
     function detectJoins(o, joins) {
-        if(o.id in joins) {
-            joins[o.id]++;
-        } else {
-            joins[o.id] = 1;
-            if(o['switch']) {
-                o.cases.forEach(function(c){ detectJoins(c[1], joins) });
-                detectJoins(o['default'], joins);
+        if('id' in o) {
+            if(o.id in joins) {
+                joins[o.id]++;
+            } else {
+                joins[o.id] = 1;
+                if(o['switch']) {
+                    o.cases.forEach(function(c){ detectJoins(c[1], joins) });
+                    detectJoins(o['default'], joins);
+                }
             }
         }
         return joins;
@@ -197,6 +199,6 @@ exports.compile = function(templates) {
         return res += '})';
     }
 
-    return serializeTop(merge(doTemplate(0, 0, {})));
+    return serializeTop((doTemplate(0, 0, {})));
 
 };
