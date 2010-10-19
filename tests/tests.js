@@ -11,16 +11,15 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
                 'topLevel'
             );
         process.stdout.write('--- tree:\n' + JSON.stringify(result) + '\n\n');
-        process.stdout.write('--- string:\n' + xjst.XJSTBeautifier.matchAll(result, 'topLevel') + '\n\n');
 
-        var compileFn = xjst.XJSTCompiler.matchAll(result.reverse(), 'topLevel');
+        var compileFn = xjst.XJSTCompiler.match(result, 'topLevel');
         process.stdout.write('--- compile:\n' + compileFn + '\n\n');
-        compileFn = process.compile(compileFn, 'compile');
+        compileFn = process.compile(compileFn, 'compile').apply;
 
         var compileFn2 = xjst.compile(result);
         process.stdout.write('--- compile2:\n' + compileFn2 + '\n\n');
         try {
-            compileFn2 = process.compile(compileFn2, 'compile2');
+            compileFn2 = process.compile(compileFn2, 'compile2').apply;
         } catch(e) { console.log(e) }
 
         process.stdout.write('\n-=-=-=-=-=-=-=-=-=-=-\n\n');

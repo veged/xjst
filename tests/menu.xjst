@@ -1,4 +1,4 @@
-c.name === 'page' {
+template(c.name === 'page') {
     c.buf.push(
         '<html>',
             '<head></head>',
@@ -8,32 +8,32 @@ c.name === 'page' {
             '</body>',
         '</html>'); }
 
-c.name === 'menu' {
+template(c.name === 'menu') {
     c.buf.push('<ul class="menu">');
     for(var i = 0, l = c.val.length; i < l; i++)
         local(c.parent = c.name, c.name = 'item', c.val = c.val[i]) c.apply(c);
     c.buf.push('</ul>'); }
 
-c.parent === 'menu' && c.name === 'item' {
+template(c.parent === 'menu' && c.name === 'item') {
     c.buf.push('<li>');
         local(c.mode1 = 'menu item content') {
             c.apply(c);
         }
     c.buf.push('</li>'); }
 
-c.mode1 === 'menu item content' {
+template(c.mode1 === 'menu item content') {
     c.buf.push(
         '<a href="' + c.val.link + '">',
             c.val.text,
         '</a>') }
 
-c.mode1 === 'menu item content' && c.val.id === c.page.id {
+template(c.mode1 === 'menu item content' && c.val.id === c.page.id) {
     c.buf.push(
         '<span>',
             c.val.text,
         '</span>') }
 
-!c.__start {
+template(!c.__start) {
     var buf = [];
     local(
         c.__start = true,

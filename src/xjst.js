@@ -16,7 +16,9 @@ Identifier.prototype.identify = function(o) {
         this.cache[key] = ++this.counter;
 };
 
-exports.compile = function(templates) {
+exports.compile = function(templatesAndOther) {
+
+    var templates = templatesAndOther[1];
 
     function newPredicMemo(o, k, v) {
         var r = {};
@@ -173,7 +175,7 @@ exports.compile = function(templates) {
     }
 
     function serializeTop(prog) {
-        var res = '(function(c){\n',
+        var res = 'exports.apply = function(c){\n',
             joins = detectJoins(prog, {});
 
         var labels = [];
@@ -196,9 +198,12 @@ exports.compile = function(templates) {
             res += serialize(t, tails);
         }
 
-        return res += '})';
+        return res += '};';
     }
 
-    return serializeTop((doTemplate(0, 0, {})));
+    return '(function(exports){' +
+        XJSTCompiler.match(templatesAndOther[0], 'other') + ';' +
+        serializeTop(doTemplate(0, 0, {})) +
+        'return exports})(typeof exports === "undefined"? {} : exports)';
 
 };

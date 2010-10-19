@@ -1,12 +1,16 @@
-parent === 'block' && name === 'sub1'
-    return '<i>' + val + '</i>'
+function helper1() { return 'help2' }
 
-val > 3 && name === 'sub2' && parent === 'block'
+template(parent === 'block' && name === 'sub1') {
+    return '<i>' + val + '</i>'}
+
+template(val > 3 && name === 'sub2' && parent === 'block')
     return '<b>' + val + '</b>'
 
 
-c.name === 'l-head'
+function helper2() { return 'help2' }
+
+template(c.name === 'l-head')
     return 'bla'
 
-c.name === 'l-head'
+template(c.name === 'l-head')
     return 'alb'
