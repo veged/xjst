@@ -8,7 +8,9 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
         var xjst = require('xjst'),
             result = xjst.XJSTParser.matchAll(
                 input,
-                'topLevel'
+                'topLevel',
+                undefined,
+                function(m, i) { throw { errorPos: i, toString: function(){ return "match failed" } } }
             );
         process.stdout.write('--- tree:\n' + JSON.stringify(result) + '\n\n');
 
