@@ -13,6 +13,6 @@
     "dependencies" : {
         "ometajs" : ">= 2.0.1"
     },
-    "engines" : { "node" : ">=0.2" },
+    "engines" : { "node" : ">=0.2.0" },
     "licenses" : [ { "type" : "AS IS" } ]
 }
