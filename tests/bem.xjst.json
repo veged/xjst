@@ -1,0 +1,18 @@
+[
+    {
+        "block": "b-bla",
+        "content": [
+            {
+                "elem": "elem1",
+                "content": "blabla"
+            },
+            {
+                "tag": "a",
+                "attrs": {
+                    "href": "//yandex.ru"
+                },
+                "content": "bla"
+            }
+        ]
+    }
+]

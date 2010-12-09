@@ -1,0 +1,239 @@
+var BEM = {},
+    toString = Object.prototype.toString,
+    SHORT_TAGS = { // хэш для быстрого определения, является ли тэг коротким
+        area : 1, base : 1, br : 1, col : 1, command : 1, embed : 1, hr : 1, img : 1,
+        input : 1, keygen : 1, link : 1, meta : 1, param : 1, source : 1, wbr : 1 };
+
+function isArray(obj) {
+    return toString.call(obj) === "[object Array]";
+}
+
+/** @fileOverview модуль для внутренних BEM-хелперов */
+/** @requires BEM */
+
+(function(BEM, undefined) {
+
+/**
+ * Разделитель для модификаторов и их значений
+ * @const
+ * @type String
+ */
+var MOD_DELIM = '_',
+
+/**
+ * Разделитель между именами блока и вложенного элемента
+ * @const
+ * @type String
+ */
+    ELEM_DELIM = '__',
+
+/**
+ * Паттерн для допустимых имен элементов и модификаторов
+ * @const
+ * @type String
+ */
+    NAME_PATTERN = '[a-zA-Z0-9-]+';
+
+function buildModPostfix(modName, modVal, buffer) {
+
+    buffer.push(MOD_DELIM, modName, MOD_DELIM, modVal);
+
+}
+
+function buildBlockClass(name, modName, modVal, buffer) {
+
+    buffer.push(name);
+    modVal && buildModPostfix(modName, modVal, buffer);
+
+}
+
+function buildElemClass(block, name, modName, modVal, buffer) {
+
+    buildBlockClass(block, undefined, undefined, buffer);
+    buffer.push(ELEM_DELIM, name);
+    modVal && buildModPostfix(modName, modVal, buffer);
+
+}
+
+BEM.INTERNAL = {
+
+    NAME_PATTERN : NAME_PATTERN,
+
+    MOD_DELIM : MOD_DELIM,
+    ELEM_DELIM : ELEM_DELIM,
+
+    buildModPostfix : function(modName, modVal, buffer) {
+
+        var res = buffer || [];
+        buildModPostfix(modName, modVal, res);
+        return buffer? res : res.join('');
+
+    },
+
+    /**
+     * Строит класс блока или элемента с учетом модификатора
+     * @private
+     * @param {String} block имя блока
+     * @param {String} [elem] имя элемента
+     * @param {String} [modName] имя модификатора
+     * @param {String} [modVal] имя элемента
+     * @param {Array} [buffer] буфер
+     * @returns {String|Array} строка класса или буфер (в зависимости от наличия параметра buffer)
+     */
+    buildClass : function(block, elem, modName, modVal, buffer) {
+
+        var typeOf = typeof modName;
+        if(typeOf == 'string') {
+            if(typeof modVal != 'string') {
+                buffer = modVal;
+                modVal = modName;
+                modName = elem;
+                elem = undefined;
+            }
+        } else if(typeOf != 'undefined') {
+            buffer = modName;
+            modName = undefined;
+        } else if(elem && typeof elem != 'string') {
+            buffer = elem;
+            elem = undefined;
+        }
+
+        if(!(elem || modName || buffer)) { // оптимизация для самого простого случая
+            return block;
+        }
+
+        var res = buffer || [];
+
+        elem?
+            buildElemClass(block, elem, modName, modVal, res) :
+            buildBlockClass(block, modName, modVal, res);
+
+        return buffer? res : res.join('');
+
+    },
+
+    /**
+     * Строит полные классы блока или элемента с учетом модификаторов
+     * @private
+     * @param {String} block имя блока
+     * @param {String} [elem] имя элемента
+     * @param {Object} [mods] имя модификатора
+     * @param {Array} [buffer] буфер
+     * @returns {String|Array} строка класса или буфер (в зависимости от наличия параметра buffer)
+     */
+    buildClasses : function(block, elem, mods, buffer) {
+
+        var res = buffer || [];
+
+        elem?
+            buildElemClass(block, elem, undefined, undefined, res) :
+            buildBlockClass(block, undefined, undefined, res);
+
+        mods && $.each(mods, function(modName, modVal) {
+            res.push(' ');
+            elem?
+                buildElemClass(block, elem, modName, modVal, res) :
+                buildBlockClass(block, modName, modVal, res);
+        });
+
+        return buffer? res : res.join('');
+
+        /*var typeOf = typeof elem;
+        if(typeOf != 'string' && typeOf != 'undefined') {
+            buffer = mods;
+            mods = elem;
+            elem = undefined;
+        }
+        if($.isArray(mods)) {
+            buffer = mods;
+            mods = undefined;
+        }
+
+        var res = buffer || [];
+        buildClasses(block, elem, mods, res);
+        return buffer? res : res.join('');*/
+
+    }
+
+}
+
+})(BEM);
+
+
+
+template(true) {
+    local(c.defaultBuild = true) c.apply(c);
+}
+
+template(isArray(c.val)) {
+    var i = 0, a;
+    while(a = c.val[i++]) {
+        local(c.val = a) c.apply(c);
+    }
+}
+
+template(typeof c.val === 'string') c.buf.push(c.val)
+
+template(c.defaultBuild) {
+    var v = c.val,
+        buf = c.buf,
+        tag = v.tag || 'div',
+        jsParams,
+        isBEM = v.block || v.elem;
+
+    v.js && ((jsParams = {})[v.block] = v.js === true? {} : v.js);
+
+    buf.push('<', tag);
+
+    if(isBEM || v.cls) {
+        buf.push(' class="');
+        if(isBEM) {
+            BEM.INTERNAL.buildClasses(v.block || c.currBlock, v.elem, v.mods, buf);
+            v.mix && v.mix.forEach(function(mix, i) {
+                buf.push(' ');
+                BEM.INTERNAL.buildClasses(mix.block, mix.elem, mix.mods, buf);
+                mix.js && ((jsParams || (jsParams = {}))[mix.block] = mix.js === true? {} : mix.js);
+            });
+        }
+
+        v.cls && buf.push(isBEM? ' ' : '', v.cls);
+
+        jsParams && buf.push(' i-bem');
+        buf.push('"');
+    }
+
+    jsParams && buf.push(
+        " onclick='return ",
+        JSON.stringify(jsParams),
+        "'");
+
+    false && v.attrs && v.attrs.forEach(function(val, name) {
+        buf.push(' ', name, '="', val, '"'); // TODO: escaping!
+    });
+
+    if(SHORT_TAGS[tag]) {
+        buf.push('/>');
+    } else {
+        buf.push('>');
+
+        if(v.content)
+            local(
+                c.val = v.content,
+                c.currBlock = v.block || c.currBlock,
+                c.defaultBuild = false) c.apply(c);
+
+        buf.push('</', tag, '>');
+    }
+
+}
+
+template(!c.__start) {
+    var ctx = {
+            val: c,
+            __start: true,
+            apply: arguments.callee,
+            buf: []
+        };
+    ctx.apply(ctx);
+    return ctx.buf.join('');
+}
