@@ -162,7 +162,7 @@ BEM.INTERNAL = {
 
 
 template(true) {
-    local(c.defaultBuild = true) c.apply(c);
+    local(c.build = true) c.apply(c);
 }
 
 template(isArray(c.val)) {
@@ -207,9 +207,9 @@ template(c.defaultBuild) {
         JSON.stringify(jsParams),
         "'");
 
-    false && v.attrs && v.attrs.forEach(function(val, name) {
-        buf.push(' ', name, '="', val, '"'); // TODO: escaping!
-    });
+    if(v.attrs)
+        for(var name in v.attrs)
+            buf.push(' ', name, '="', v.attrs[name], '"'); // TODO: escaping!
 
     if(SHORT_TAGS[tag]) {
         buf.push('/>');
@@ -225,6 +225,34 @@ template(c.defaultBuild) {
         buf.push('</', tag, '>');
     }
 
+}
+
+template(c.build) {
+    local(c.build = false, c.defaultBuild = true) c.apply(c);
+}
+
+template(c.build && c.val.block === 'b-alb') {
+    local(
+        c.val.tag = 'span',
+        c.val.attrs = c.val.attrs || {},
+        c.val.attrs.title = c.val.attrs.title || c.val.id,
+
+        c.build = false,
+        c.defaultBuild = true) c.apply(c);
+}
+
+template(c.build && c.val.block === 'b-alb' && !c.alb1) {
+    local(
+        (c.val.attrs = c.val.attrs || {})['bla'] = 'bla',
+
+        c.alb1 = true) c.apply(c);
+}
+
+template(c.build && c.val.block === 'b-alb' && c.val.content.length > 1 && !c.alb1) {
+    local(
+        (c.val.attrs = c.val.attrs || {})['blablabla'] = 'blablabla',
+
+        c.alb1 = true) c.apply(c);
 }
 
 template(!c.__start) {

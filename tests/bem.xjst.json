@@ -12,6 +12,30 @@
                     "href": "//yandex.ru"
                 },
                 "content": "bla"
+            },
+            {
+                "block" : "b-alb",
+                "attrs" : {
+                    "title" : "OLDTITLE"
+                },
+                "id" : "ALB",
+                "content" : [
+                    {
+                        "elem" : "e1"
+                    }
+                ]
+            },
+            {
+                "block" : "b-alb",
+                "id" : "ALB",
+                "content" : [
+                    {
+                        "elem" : "e1"
+                    },
+                    {
+                        "elem" : "e2"
+                    }
+                ]
             }
         ]
     }
