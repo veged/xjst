@@ -1,7 +1,7 @@
 # XJST
 
 XSLT inspired JavaScript templates (with spices).
-Built on [node](http://nodejs.org) and [OMeta/JS](https://github.com/veged/ometa-js).
+Built on [NodeJS](http://nodejs.org) and [OMeta/JS](https://github.com/veged/ometa-js).
 
 ## Installation
 
