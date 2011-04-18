@@ -166,28 +166,26 @@ local(v1 = x1, v2 = x2, ...) body
 
 ### Семантика
 
-```
-var x = 2,
-    y = { a : 'b' },
-    z = [0, 1, 2, 3];
-function Y() { return y }
-function a() { return 'a' }
-local(x = 3, Y()[a()] = {}, y['b'] = 42, z[x] = 4) {
-    x; // 3
-    y['a']; // Object
-    y['b']; // 42
-    ++y['b']; //43
-    z[2]; // 2
-    z[3]; // 4
-    ++x; // 4
-}
-z[3]; // 3
-x; // 5
-y['a']; // 'b'
-y['b']; // undefined
+    var x = 2,
+        y = { a : 'b' },
+        z = [0, 1, 2, 3];
+    function Y() { return y }
+    function a() { return 'a' }
+    local(x = 3, Y()[a()] = {}, y['b'] = 42, z[x] = 4) {
+        x; // 3
+        y['a']; // Object
+        y['b']; // 42
+        ++y['b']; //43
+        z[2]; // 2
+        z[3]; // 4
+        ++x; // 4
+    }
+    z[3]; // 3
+    x; // 5
+    y['a']; // 'b'
+    y['b']; // undefined
 
-'b' in y; // true!
-```
+    'b' in y; // true!
 
 Некоторые неочевидные моменты
 
