@@ -5,6 +5,7 @@
 ```javascript
 template(match) body
 ```
+
 где
   * `match` это произвольное выражение
   * `body` либо одиночный `statement`, либо блок `{ ... }`
