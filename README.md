@@ -22,4 +22,4 @@ You can also use `bin/xjst` to compile `*.xjst` to CommonJS module.
 
 ## Documentation
 
-Some technical details (in Russian) can be found in `doc/tech.ru.wiki`.
+Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
