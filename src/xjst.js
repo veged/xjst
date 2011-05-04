@@ -2,7 +2,9 @@ var ometa = require('ometajs'),
     OMeta = ometa.OMeta,
     Parser = ometa.Parser,
     BSJSParser = exports.BSJSParser = ometa.BSJSParser,
-    BSJSTranslator = exports.BSJSTranslator = ometa.BSJSTranslator;
+    BSJSTranslator = exports.BSJSTranslator = ometa.BSJSTranslator,
+    crypto = require('crypto'),
+    sha1 = function(o) { return crypto.createHash('sha1').update(o).digest('base64') };
 
 function Identifier () {
     this.counter = 0;
@@ -47,9 +49,36 @@ exports.compile = function(templatesAndOther) {
             return vals;
         })();
 
+    var cache = {},
+        idCounter = 1;
+
+    function merge(o) {
+        var hash,
+            id = idCounter++;
+
+        if(o['switch']) {
+            hash += 'switch ' + JSON.stringify(o['switch']) + '{';
+            o.cases.forEach(function(c){
+                c[1] = merge(c[1]);
+                hash += c[1].hash + " ";
+            });
+            o['default'] = merge(o['default']);
+            hash += o['default'].hash + "}";
+            hash = sha1(hash);
+        } else {
+            hash = o.hash || sha1(JSON.stringify(o.exprs || o.stmt)));
+        }
+
+        (hash in cache) || (cache[o.hash = hash] = o);
+
+        cache[hash].id = id;
+
+        return cache[hash];
+    }
+
     function doTemplate(i, j, predicMemo) {
         var template = templates[i];
-        if(!template) return { 'stmt': ['throw', ['get', 'true']] };
+        if(!template) return merge({ 'stmt': ['throw', ['get', 'true']] });
 
         var subMatch = template[0][j];
         if(!subMatch) return {
@@ -75,41 +104,18 @@ exports.compile = function(templatesAndOther) {
             else
                 return doTemplate(i + 1, 0, predicMemo);
         else
-            return {
+            return merge({
                 //'comment': JSON.stringify([i, j, predicMemo]),
                 'switch': subMatch[1],
                 'cases': predicatesValues[predicate].map(function(v){
                         return [v, doTemplate(i, j, newPredicMemo(predicMemo, predicate, JSON.stringify(v)))]
                     }),
                 'default': doTemplate(i, j, newPredicMemo(predicMemo, predicate, undefined))
-            };
-    }
-
-    var cache = {},
-        idCounter = 1,
-        merges = {};
-
-    function merge(o) {
-        var hash,
-            id = idCounter++;
-
-        if(o['switch']) {
-            hash += 'switch ' + JSON.stringify(o['switch']) + '{';
-            o.cases.forEach(function(c){
-                c[1] = merge(c[1]);
-                hash += c[1].hash + " ";
             });
-            o['default'] = merge(o['default']);
-            hash += o['default'].hash + "}";
-        } else {
-            hash = JSON.stringify(o.exprs || o.stmt);
-        }
-
-        (hash in cache) || (cache[o.hash = hash] = o);
-        cache[hash].id = id;
-
-        return cache[hash];
     }
+
+
+    var merges = {};
 
     function serialize(o, tails) {
         if(o.id in merges) {
@@ -203,7 +209,7 @@ exports.compile = function(templatesAndOther) {
 
     return '(function(exports){' +
         XJSTCompiler.match(templatesAndOther[0], 'other') + ';' +
-        serializeTop(merge(doTemplate(0, 0, {}))) +
+        serializeTop(doTemplate(0, 0, {})) +
         'return exports})(typeof exports === "undefined"? {} : exports)';
 
 };
