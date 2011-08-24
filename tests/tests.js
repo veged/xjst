@@ -5,7 +5,7 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
     if (err) throw err;
     console.log(input);
     try {
-        var xjst = require('xjst'),
+        var xjst = require('./../lib/xjst'),
             result = xjst.XJSTParser.matchAll(
                 input,
                 'topLevel',
@@ -43,11 +43,12 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
         });
 
     } catch (e) {
-        e.errorPos != undefined &&
-            sys.error(
-                input.slice(0, e.errorPos) +
-                "\n--- Parse error ->" +
-                input.slice(e.errorPos) + '\n');
+	if(e.errorPos != undefined) {
+            var isString = typeof input === 'string';
+            isString && (input = input.split(''));
+            input.splice(e.errorPos, 0, '\n--- Parse error ->');
+            sys.error(isString? input.join('') : input);
+	}
         console.log('error: ' + e);
         throw e
     }

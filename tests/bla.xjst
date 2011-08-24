@@ -1,10 +1,16 @@
 function helper1() { return 'help2' }
+var b;
 
 template(parent === 'block' && name === 'sub1') {
     return '<i>' + val + '</i>'}
 
-template(val > 3 && name === 'sub2' && parent === 'block')
+template(val > 3 && name === 'sub2' && parent === 'block') {
+    var val;
+    val = local(this.a = 1, b = 'b', this[b] = 3) (this[b] + this[a]);
+    local(b = 'c', this[b] = 4)
+        val = this.c;
     return '<b>' + val + '</b>'
+}
 
 
 function helper2() { return 'help2' }
