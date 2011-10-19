@@ -49,7 +49,7 @@ ometa XJSTParser <: BSJSParser {
                 ]
             ]
         } |
-	[#set [#getp const:k [#this]]:p :v] -> { // this.x = ...
+        [#set [#getp const:k [#this]]:p :v] -> { // this.x = ...
             var id = XJSTParser._getLocalId(),
                 vTree = [#getp, k, [#this]];
             this._vars.push(['__v' + id]);
@@ -121,9 +121,9 @@ ometa XJSTParser <: BSJSParser {
 
     template = "template" "(" expr:m ")" stmt:b -> [XJSTParser.match(m, #expr2match), b],
 
-    topLevel = { this._vars = [] } 
+    topLevel = { this._vars = [] }
         (template:t -> [#template, t] | srcElem:s -> [#stmt, s])+:ts spaces end -> {
-	if (this._vars.length) {
+        if (this._vars.length) {
            this._vars.forEach(function(v) {
                v.push([#get, #undefined]);
            });

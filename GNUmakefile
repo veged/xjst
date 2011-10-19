@@ -22,4 +22,7 @@ tests: $(subst .xjst,,$(wildcard tests/*.xjst))
 tests/%:
 	node tests/tests.js tests/$*.xjst
 
+benchmark:
+	node tests/benchmark.js
+
 .PHONY: all FORCE
