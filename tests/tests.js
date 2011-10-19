@@ -6,7 +6,7 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
     console.log(input);
     try {
         var xjst = require('./../lib/xjst'),
-            result = xjst.XJSTParser.matchAll(
+            result = xjst.ometa.XJSTParser.matchAll(
                 input,
                 'topLevel',
                 undefined,
@@ -14,7 +14,7 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
             );
         process.stdout.write('--- tree:\n' + JSON.stringify(result) + '\n\n');
 
-        var compileFn = xjst.XJSTCompiler.match(result, 'topLevel');
+        var compileFn = xjst.ometa.XJSTCompiler.match(result, 'topLevel');
         process.stdout.write('--- compile:\n' + compileFn + '\n\n');
         compileFn = process.compile(compileFn, 'compile').apply;
 

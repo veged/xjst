@@ -14,7 +14,7 @@ function render(input) {
   var parsed,
       compiled;
 
-  parsed = xjst.XJSTParser.matchAll(input, 'topLevel', undefined, function(m, i) {
+  parsed = xjst.ometa.XJSTParser.matchAll(input, 'topLevel', undefined, function(m, i) {
     throw { errorPos: i, toString: function(){ return "match failed" } }
   });
   compiled = eval(xjst.compile(parsed));

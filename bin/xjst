@@ -1,3 +1,4 @@
 #!/usr/bin/env node
+var argv = require('optimist').argv;
 
-require('../lib/2js').main();
+require('../lib/2js').run(argv);
