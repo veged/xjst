@@ -1,0 +1,24 @@
+function key(i) {
+  return 'key' + i;
+};
+
+template (c.type === 'list') {
+  var index = 0;
+
+  return ['<ul>'].concat(c.items.map(function(item) {
+    local (item.type = 'item', item.index = index++,
+           item[key(1)] = {}, item[key(3)] = {},
+           item[key(1)][key(2)] = c[key(1)][key(2)],
+           item[key(3)][key(4)] = c[key(3)][key(4)]) {
+      return c.apply(item);
+    }
+  }), ['</ul>']);
+}
+
+template (c.type === 'item') {
+  return [
+      '<li data-index="', c.index, '" >',
+      c.value,
+      '</li>'
+  ].join('');
+}

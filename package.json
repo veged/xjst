@@ -14,6 +14,14 @@
     "dependencies" : {
         "ometajs" : ">= 2.0.1"
     },
+    "devDependencies": {
+        "benchmark": "0.2.x",
+        "cliff": "0.1.x",
+        "step": "0.0.4",
+        "microtime": "0.1.x",
+        "optimist": "0.2.x",
+        "watch": "0.3.x"
+    },
     "engines" : { "node" : ">=0.2.0" },
     "licenses" : [ { "type" : "AS IS" } ]
 }

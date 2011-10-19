@@ -1,0 +1,13 @@
+function key1() {
+  return 'key1';
+}
+
+function key2() {
+  return 'key2';
+}
+
+template (true) {
+  local (c[key1()][key2()] = 'ok') {
+    return c[key1()][key2()];
+  }
+}

@@ -1,0 +1,11 @@
+template (c.x === 1 && c.y === 3) {
+  return "ok";
+}
+
+template (c.x === 2 && c.y === 2) {
+  return "ok";
+}
+
+template (c.x === 1 && c.y === 2 && c.z === 3) {
+  return "ok";
+}
