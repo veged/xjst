@@ -1,12 +1,11 @@
 var benchmark = require('benchmark'),
     cliff = require('cliff'),
-    step = require('step');
+    Q = require('q'),
 
-// TODO Move from step to `Q`
-var templates = require('./templates'),
-    suite = new benchmark.Suite();
+    templates = require('./templates'),
+    suite = new benchmark.Suite(),
 
-var xjst = require('../lib/xjst');
+    xjst = require('../lib/xjst');
 
 function render(input) {
   return xjst.compile(input).apply;
@@ -26,34 +25,33 @@ exports.run = function(options) {
   ].join('\n').rainbow);
   console.log('              // benchmarks //');
 
-  step(function() {
-    // TODO load user's benchmarks
-    templates.load(this.parallel());
-  }, function(err, templates) {
-    if (err) throw err;
+  function progress() {
+    process.stdout.clearLine(0);
+    process.stdout.cursorTo(0);
+    process.stdout.write([
+        'completed: '.blue,
+        (progress.count++ * 100 / progress.total).toFixed(1),
+        '%'
+    ].join(''));
+  };
+  progress.count = 0;
 
-    var group = this.group();
+  // TODO load user's benchmarks
+  var templatesLoaded = templates.load(),
+      processing;
 
+  Q.when(templatesLoaded, function(templates) {
     process.stdout.write('\n');
 
-    function progress() {
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      process.stdout.write([
-          'completed: '.blue,
-          (progress.count++ * 100 / progress.total).toFixed(1),
-          '%'
-      ].join(''));
-    };
-    progress.count = 0;
     progress.total = Object.keys(templates).length;
-
     progress();
+  });
 
-    Object.keys(templates).forEach(function (name) {
+  processing = Q.when(templatesLoaded, function(templates) {
+    var wait = Object.keys(templates).map(function (name) {
       var template = templates[name],
-          callback = group(),
-          fn = render(template.xjst);
+          fn = render(template.xjst),
+          defer = Q.defer();
 
       template.data.apply = fn;
 
@@ -63,7 +61,8 @@ exports.run = function(options) {
         maxTime: options['max-time'],
         onComplete: function() {
           progress();
-          callback(null, {
+
+          defer.resolve({
             name: name,
             'mean time': (this.stats.mean * 1e3).toFixed(9) + 'ms',
             'ops/sec': (1 / this.stats.mean).toFixed(0),
@@ -72,28 +71,34 @@ exports.run = function(options) {
           });
         }
       });
+
+      return defer.promise;
     });
 
     suite.run({ async: true });
-  }, function(err, results) {
-    process.stdout.write('\n\n');
 
-    if (err) throw err;
+    return wait;
+  });
 
-    if (options.details) {
-      console.log(cliff.stringifyObjectRows(
-          results,
-          ['name', 'mean time', 'ops/sec', 'elapsed time'],
-          ['red', 'green', 'blue', 'yellow']
-      ));
-    }
+  return Q.when(processing, function(jobs) {
+    Q.when(Q.all(jobs), function(results) {
+      process.stdout.write('\n\n');
 
-    var total = results.reduce(function (acc, curr) {
-      return acc > 1 / curr.mean ? 1 / curr.mean : acc;
-    }, Infinity);
+      if (options.details) {
+        console.log(cliff.stringifyObjectRows(
+            results,
+            ['name', 'mean time', 'ops/sec', 'elapsed time'],
+            ['red', 'green', 'blue', 'yellow']
+        ));
+      }
 
-    console.log(''); // newline
+      var total = results.reduce(function (acc, curr) {
+        return acc > 1 / curr.mean ? 1 / curr.mean : acc;
+      }, Infinity);
 
-    console.log('Worst ops/sec: '.red, (total.toFixed(0) + ' ops/sec').blue);
+      console.log(''); // newline
+
+      console.log('Worst ops/sec: '.red, (total.toFixed(0) + ' ops/sec').blue);
+    });
   });
 };

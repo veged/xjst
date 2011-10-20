@@ -1,8 +1,11 @@
 var fs = require('fs'),
     path = require('path'),
-    watch = require('watch');
+    watch = require('watch'),
+    Q = require('q');
 
-exports.load = function(callback) {
+exports.load = function() {
+  var defer = Q.defer();
+
   watch.walk(__dirname + '/', function(err, files) {
     files = Object.keys(files);
 
@@ -21,9 +24,11 @@ exports.load = function(callback) {
         };
       });
     } catch (e) {
-      return callback(e);
+      return defer.reject(e);
     }
 
-    callback(null, templates);
+    return defer.resolve(templates);
   });
+
+  return defer.promise;
 };

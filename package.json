@@ -13,12 +13,12 @@
     "bin" : { "xjst" : "./bin/xjst" },
     "dependencies" : {
         "coa": "0.1.x",
-        "ometajs" : ">= 2.0.1"
+        "ometajs" : "2.0.x"
     },
     "devDependencies": {
         "benchmark": "0.2.x",
         "cliff": "0.1.x",
-        "step": "0.0.4",
+        "q": "0.7.x",
         "microtime": "0.1.x",
         "watch": "0.3.x"
     },
