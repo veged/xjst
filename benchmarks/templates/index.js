@@ -3,12 +3,11 @@ var fs = require('fs'),
     watch = require('watch'),
     Q = require('q');
 
-exports.load = function() {
-  var defer = Q.defer();
+exports.load = function(file) {
+  var defer = Q.defer(),
+      filesLoaded = Q.defer();
 
-  watch.walk(__dirname + '/', function(err, files) {
-    files = Object.keys(files);
-
+  filesLoaded.promise.then(function(files) {
     var templates = {};
     try {
       files.filter(function(filename) {
@@ -24,11 +23,24 @@ exports.load = function() {
         };
       });
     } catch (e) {
-      return defer.reject(e);
+      defer.reject(e);
+      return;
     }
 
-    return defer.resolve(templates);
+    defer.resolve(templates);
   });
+
+  if (!file) {
+   watch.walk(__dirname + '/', function(err, files) {
+      if (err) {
+        filesLoaded.reject(err);
+      } else {
+        filesLoaded.resolve(Object.keys(files));
+      }
+    });
+  } else {
+    filesLoaded.resolve([file]);
+  }
 
   return defer.promise;
 };

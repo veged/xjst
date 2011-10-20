@@ -36,8 +36,7 @@ exports.run = function(options) {
   };
   progress.count = 0;
 
-  // TODO load user's benchmarks
-  var templatesLoaded = templates.load(),
+  var templatesLoaded = templates.load(options.file),
       processing;
 
   Q.when(templatesLoaded, function(templates) {
