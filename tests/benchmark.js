@@ -11,15 +11,7 @@ var templates = require('./fixtures/templates'),
 var xjst = require('../lib/xjst');
 
 function render(input) {
-  var parsed,
-      compiled;
-
-  parsed = xjst.ometa.XJSTParser.matchAll(input, 'topLevel', undefined, function(m, i) {
-    throw { errorPos: i, toString: function(){ return "match failed" } }
-  });
-  compiled = eval(xjst.compile(parsed));
-
-  return compiled.apply;
+  return xjst.compile(input).apply;
 }
 
 console.log([
