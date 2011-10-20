@@ -1,2 +1,19 @@
 #!/usr/bin/env node
-require('../tests/benchmark');
+require('coa').Cmd()
+    .name(process.argv[1])
+    .helpful()
+    .opt()
+        .name('max-time').title('Execution time limit for each suite')
+        .short('m').long('max-time')
+        .def(1)
+        .end()
+    .opt()
+        .name('details').title('Print details for each suite')
+        .short('d').long('details')
+        .flag()
+        .def(false)
+        .end()
+    .act(function(options) {
+      require('../tests/benchmark').run(options)
+    })
+    .run();

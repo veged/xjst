@@ -12,8 +12,8 @@
     "directories" : { "lib" : "./lib" },
     "bin" : { "xjst" : "./bin/xjst" },
     "dependencies" : {
-        "ometajs" : ">= 2.0.1",
-        "optimist": "0.2.x"
+        "coa": "0.1.x",
+        "ometajs" : ">= 2.0.1"
     },
     "devDependencies": {
         "benchmark": "0.2.x",

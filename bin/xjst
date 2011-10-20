@@ -1,4 +1,32 @@
 #!/usr/bin/env node
-var argv = require('optimist').argv;
+var fs = require('fs');
 
-require('../lib/2js').run(argv);
+require('coa').Cmd()
+    .name(process.argv[1])
+    .helpful()
+    .opt()
+        .name('input').title('Input file (default: stdin)')
+        .short('i').long('input')
+        .def(process.stdin)
+        .act(function(options) {
+          if (typeof options.input === 'string') {
+            options.input = fs.createReadStream(options.input);
+          } else {
+            options.input.resume();
+          }
+        })
+        .end()
+    .opt()
+        .name('output').title('Output file (default: stdout)')
+        .short('d').long('details')
+        .def(process.stdout)
+        .act(function(options) {
+          if (typeof options.output === 'string') {
+            options.output = fs.createWriteStream(options.output);
+          }
+        })
+        .end()
+    .act(function(options) {
+      require('../lib/xjst').run(options);
+    })
+    .run();
