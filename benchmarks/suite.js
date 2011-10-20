@@ -3,7 +3,7 @@ var benchmark = require('benchmark'),
     step = require('step');
 
 // TODO Move from step to `Q`
-var templates = require('./fixtures/templates'),
+var templates = require('./templates'),
     suite = new benchmark.Suite();
 
 var xjst = require('../lib/xjst');
