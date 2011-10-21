@@ -18,11 +18,8 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
         process.stdout.write('--- compile:\n' + compileFn + '\n\n');
         compileFn = process.compile(compileFn, 'compile').apply;
 
-        var compileFn2 = xjst.compile(result);
-        process.stdout.write('--- compile2:\n' + compileFn2 + '\n\n');
-        try {
-            compileFn2 = process.compile(compileFn2, 'compile2').apply;
-        } catch(e) { console.log(e) }
+        var compileFn2 = xjst.compile(input).apply;
+        process.stdout.write('--- compile2:\n' + compileFn2.toString() + '\n\n');
 
         process.stdout.write('\n-=-=-=-=-=-=-=-=-=-=-\n\n');
         fs.readFile(process.argv[2] + '.json', 'utf8', function(err, input){
