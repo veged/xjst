@@ -1,13 +1,17 @@
-function key1() {
-  return 'key1';
-}
-
-function key2() {
-  return 'key2';
-}
+function a() { return 'a'; }
+function b() { return 'b'; }
+function cf() { return 'c'; }
 
 template (true) {
-  local (c[key1()][key2()] = 'ok') {
-    return c[key1()][key2()];
-  }
+  var x = 0;
+
+  local (c[a()][b()][cf()] = 'first') x++;
+  local (c[a()][b()][cf()] = 'second') x++;
+  local (c[a()][b()][cf()] = 'third') x++;
+  local (c[a()][b()][cf()] = 'fourth') x++;
+  local (this[a()][b()][cf()] = 'fifth') x++;
+  local (this[a()][b()][cf()] = 'sixth') x++;
+  local (x = 0) x++;
+
+  return 'times: ' + x;
 }
