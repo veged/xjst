@@ -8,7 +8,7 @@ var benchmark = require('benchmark'),
     xjst = require('../lib/xjst');
 
 function render(input) {
-  return xjst.compile(input).apply;
+  return typeof input === 'function' ? input : xjst.compile(input).apply;
 }
 
 exports.run = function(options) {
@@ -36,8 +36,10 @@ exports.run = function(options) {
   };
   progress.count = 0;
 
-  var templatesLoaded = templates.load(options.file),
+  var templatesLoaded,
       processing;
+
+  templatesLoaded = templates.load(options.file);
 
   Q.when(templatesLoaded, function(templates) {
     process.stdout.write('\n');
@@ -55,7 +57,7 @@ exports.run = function(options) {
       template.data.apply = fn;
 
       suite.add(name, function() {
-        return fn(template.data);
+        return fn.call(template.data, template.data);
       }, {
         maxTime: options['max-time'],
         onComplete: function() {
