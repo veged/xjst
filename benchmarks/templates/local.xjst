@@ -12,6 +12,7 @@ template (true) {
   local (this[a()][b()][cf()] = 'fifth') x++;
   local (this[a()][b()][cf()] = 'sixth') x++;
   local (x = 0) x++;
+  var y = local (x = 0) x;
 
   return 'times: ' + x;
 }
