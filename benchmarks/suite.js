@@ -7,8 +7,8 @@ var benchmark = require('benchmark'),
 
     xjst = require('../lib/xjst');
 
-function render(input) {
-  return typeof input === 'function' ? input : xjst.compile(input).apply;
+function render(input, file) {
+  return typeof input === 'function' ? input : xjst.compile(input, file).apply;
 }
 
 exports.run = function(options) {
@@ -51,7 +51,7 @@ exports.run = function(options) {
   processing = Q.when(templatesLoaded, function(templates) {
     var wait = Object.keys(templates).map(function (name) {
       var template = templates[name],
-          fn = render(template.xjst),
+          fn = render(template.xjst, 'benchmarks/' + name),
           defer = Q.defer();
 
       template.data.apply = fn;

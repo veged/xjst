@@ -5,7 +5,7 @@ function cf() { return 'c'; }
 template (true) {
   var x = 0;
 
-  local (c[a()][b()][cf()] = 'first') x++;
+  local (c[a()][b()][cf()] = 'first', this.a[b()][cf()] = 'first.5') x++;
   local (c[a()][b()][cf()] = 'second') x++;
   local (c[a()][b()][cf()] = 'third') x++;
   local (c[a()][b()][cf()] = 'fourth') x++;
