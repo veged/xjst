@@ -1,4 +1,5 @@
 var sys = require('sys'),
+    vm = require('vm'),
     fs = require('fs');
 
 fs.readFile(process.argv[2], 'utf8', function(err, input){
@@ -16,7 +17,7 @@ fs.readFile(process.argv[2], 'utf8', function(err, input){
 
         var compileFn = xjst.ometa.XJSTCompiler.match(result, 'topLevel');
         process.stdout.write('--- compile:\n' + compileFn + '\n\n');
-        compileFn = process.compile(compileFn, 'compile').apply;
+        compileFn = vm.runInThisContext(compileFn, 'compile').apply;
 
         var compileFn2 = xjst.compile(input).apply;
         process.stdout.write('--- compile2:\n' + compileFn2.toString() + '\n\n');
