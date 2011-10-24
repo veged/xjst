@@ -1,0 +1,21 @@
+var s1 = 'a', s2 = 'b', s3 = 'c', s4 = true;
+
+template(c.type === 'simple' && s1 === 'b') {
+  return 'wrong';
+}
+
+template(c.type === 'simple' && s1 === 'a') {
+  return 'ok';
+}
+
+template(c.type === 'complex' && s1 === 'b' && s2 === 'b') {
+  return 'wrong';
+}
+
+template(c.type === 'complex' && s1 === 'a' && s2 === 'b' && s3 !== 'c') {
+  return 'wrong';
+}
+
+template(c.type === 'complex' && s1 === 'a' && s3 === 'c' && s4) {
+  return 'ok';
+}

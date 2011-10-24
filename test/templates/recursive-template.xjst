@@ -1,0 +1,16 @@
+template(c.type === 'simple') {
+  return apply({
+    type: 'slist',
+    items: [1,2,3,4]
+  })
+}
+
+template(c.type === 'slist') {
+  return '<ul>' + c.items.map(function(item) {
+    return apply({ type: 'sitem', value: item });
+  }).join('') + '</ul>';
+}
+
+template(c.type === 'sitem') {
+  return '<li>' + c.value + '</li>';
+}

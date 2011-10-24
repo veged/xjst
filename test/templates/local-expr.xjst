@@ -1,0 +1,22 @@
+template(c.type === 'simple') {
+  var x = 1;
+  var a = local (x = x + 2) x;
+
+  return {
+    x: x,
+    a: a
+  };
+}
+
+template(c.type === 'complex') {
+  function a() { return 'a'; };
+  function c() { return 'c'; };
+  var x = { a: { b: { c: { d: 1 } } } };
+
+  var v = local (x[a()].b[c()]["d"] = 3) x.a.b.c.d;
+
+  return {
+    x: x.a.b.c.d,
+    a: v
+  };
+}
