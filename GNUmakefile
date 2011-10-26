@@ -1,15 +1,15 @@
-
 all: lib
 
 lib: lib/xjst/ometa/xjst.ometajs
 	ometajs2js -i lib/xjst/ometa/xjst.ometajs -o lib/xjst/ometa/xjst.js
 
-tests: $(subst .xjst,,$(wildcard tests/*.xjst))
+clean:
+	@-[ -f lib/xjst/ometa/xjst.js ] && rm lib/xjst/ometa/xjst.js
 
-tests/%:
-	node tests/tests.js tests/$*.xjst
+test:
+	nodeunit test/*/*-test.js
 
-benchmark:
-	node tests/benchmark.js
+benchmark: *
+	bin/benchmark --details
 
-.PHONY: all FORCE
+.PHONY: all test clean FORCE

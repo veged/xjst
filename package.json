@@ -29,6 +29,6 @@
     "scripts": {
       "prepublish": "make",
       "publish": "make clean",
-      "test": "nodeunit test/*/*-test.js"
+      "test": "make test"
     }
 }
