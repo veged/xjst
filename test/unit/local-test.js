@@ -3,7 +3,7 @@ var common = require('../fixtures/common'),
 
 function localTest(name, type) {
   return function(test) {
-    var result = common.render(name).apply({ type: type });
+    var result = common.render(name).apply.call({ type: type });
 
     assert.equal(result.a, 3);
     assert.equal(result.x, 1);

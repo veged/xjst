@@ -54,10 +54,9 @@ exports.run = function(options) {
           fn = render(template.xjst, 'benchmarks/' + name),
           defer = Q.defer();
 
-      template.data.apply = fn;
-
+        fn.call(template.data);
       suite.add(name, function() {
-        return fn.call(template.data, template.data);
+        return fn.call(template.data);
       }, {
         maxTime: options['max-time'],
         onComplete: function() {

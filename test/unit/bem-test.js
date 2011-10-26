@@ -24,6 +24,6 @@ exports['some bem template'] = function(test) {
   var expected = fs.readFileSync(__dirname + '/../templates/bem-bl.html')
                    .toString();
 
-  assert.equal(common.render('bem-bl').apply.call(c, c) + '\n', expected);
+  assert.equal(common.render('bem-bl').apply.call(c) + '\n', expected);
   test.done();
 };

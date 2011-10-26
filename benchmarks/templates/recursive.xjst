@@ -1,8 +1,9 @@
-template (c.type === 'list') {
-  return ['<ul>'].concat(c.items.map(function (item) {
-    return c.apply(item);
+template (this.type === 'list') {
+  var self = this;
+  return ['<ul>'].concat(this.items.map(function (item) {
+    return self.apply.call(item);
   }), ['</ul>']).join('');
 }
-template (c.type === 'item') {
-  return '<li>' + c.value + '</li>';
+template (this.type === 'item') {
+  return '<li>' + this.value + '</li>';
 }

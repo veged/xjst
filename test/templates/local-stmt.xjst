@@ -1,4 +1,4 @@
-template(c.type === 'simple') {
+template(this.type === 'simple') {
   var x = 1,
       a = 0;
   local(x = x + 2) {
@@ -11,7 +11,7 @@ template(c.type === 'simple') {
   };
 }
 
-template(c.type === 'complex') {
+template(this.type === 'complex') {
   function a() { return 'a'; };
   function c() { return 'c'; };
   var x = { a: { b: { c: { d: 1 } } } },

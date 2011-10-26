@@ -7,7 +7,7 @@ clean:
 	@-[ -f lib/xjst/ometa/xjst.js ] && rm lib/xjst/ometa/xjst.js
 
 test:
-	nodeunit test/*/*-test.js
+	nodeunit test/unit/*-test.js
 
 benchmark: *
 	bin/benchmark --details

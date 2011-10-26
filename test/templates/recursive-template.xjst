@@ -1,16 +1,17 @@
-template(c.type === 'simple') {
-  return apply({
+template(this.type === 'simple') {
+  return this.apply.call({
     type: 'slist',
     items: [1,2,3,4]
   })
 }
 
-template(c.type === 'slist') {
-  return '<ul>' + c.items.map(function(item) {
-    return apply({ type: 'sitem', value: item });
+template(this.type === 'slist') {
+  var self = this;
+  return '<ul>' + this.items.map(function(item) {
+    return self.apply.call({ type: 'sitem', value: item });
   }).join('') + '</ul>';
 }
 
-template(c.type === 'sitem') {
-  return '<li>' + c.value + '</li>';
+template(this.type === 'sitem') {
+  return '<li>' + this.value + '</li>';
 }

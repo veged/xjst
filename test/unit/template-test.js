@@ -3,7 +3,7 @@ var common = require('../fixtures/common'),
 
 function templateTest(name, type, expected) {
   return function(test) {
-    var result = common.render(name).apply({ type: type });
+    var result = common.render(name).apply.call({ type: type });
 
     assert.equal(result, expected || 'ok');
 
