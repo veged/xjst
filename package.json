@@ -22,7 +22,7 @@
         "q": "0.7.x",
         "microtime": "0.1.x",
         "watch": "0.3.x",
-        "nodeuinit": "0.5.x"
+        "nodeunit": "0.5.x"
     },
     "engines" : { "node" : ">=0.2.0" },
     "licenses" : [ { "type" : "AS IS" } ],
