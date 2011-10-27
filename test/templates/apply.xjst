@@ -4,6 +4,7 @@ template(this.type === 'first') {
 }
 
 template(this.type === 'second') {
+  var we = 'are different';
   return 'ok';
 }
 
@@ -13,5 +14,6 @@ template(this.type === 'third') {
 }
 
 template(this.type === 'fourth') {
+  var yeah = 'really';
   return 'ok';
 }
