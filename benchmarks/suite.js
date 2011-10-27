@@ -8,7 +8,7 @@ var benchmark = require('benchmark'),
     xjst = require('../lib/xjst');
 
 function render(input, file) {
-  return typeof input === 'function' ? input : xjst.compile(input, file).apply;
+  return typeof input.apply === 'function' ? input.apply : xjst.compile(input, file).apply;
 }
 
 exports.run = function(options) {
