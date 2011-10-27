@@ -1,4 +1,5 @@
 template(this.type === 'first') {
+  var fn = apply;
   return apply(this.type = 'second');
 }
 
