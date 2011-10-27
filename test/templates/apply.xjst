@@ -1,0 +1,16 @@
+template(this.type === 'first') {
+  return apply(this.type = 'second');
+}
+
+template(this.type === 'second') {
+  return 'ok';
+}
+
+template(this.type === 'third') {
+  this.type = 'fourth';
+  return apply();
+}
+
+template(this.type === 'fourth') {
+  return 'ok';
+}
