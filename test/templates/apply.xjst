@@ -1,27 +1,42 @@
-template(this.type === 'first') {
-  var fn = apply;
-  this.color = 'blue';
-  local (this.mod = 'bem') {
-    return apply(this.type = 'second');
-  }
+template(this.type === 'simple') {
+  return apply(this.mod = 'x');
 }
 
-template(this.type === 'second' && this.mod === 'bem' && this.color === 'blue') {
-  var we = 'are different';
+template(this.type === 'simple' && this.mod === 'x') {
+  var i = 'am unique!';
   return 'ok';
 }
 
-template(this.type === 'second' && this.mod === 'bem' && this.color === 'red') {
+template(this.type === 'simple' && this.mod === 'y') {
+  var i = 'am unique!';
+  return 'ok';
+}
+
+template(this.type === 'complex') {
+  var fn = apply;
+  this.color = 'red';
+  local (this.mod = 'bem') {
+    return apply(this.type = 'complex-2');
+  }
+}
+
+template(this.type === 'complex-2' && this.mod === 'bem' && this.color === 'blue') {
+  var we = 'are different';
+  return 'blue';
+}
+
+template(this.type === 'complex-2' && this.mod === 'bem' && this.color === 'red') {
   var we = 'are different 2';
   return 'ok';
 }
 
-template(this.type === 'third') {
-  this.type = 'fourth';
+template(this.type === 'non-optimizable') {
+  // shouldn't be optimized
+  this.type = 'non-optimizable-2';
   return apply();
 }
 
-template(this.type === 'fourth') {
+template(this.type === 'non-optimizable-2') {
   var yeah = 'really';
   return 'ok';
 }

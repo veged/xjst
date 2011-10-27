@@ -11,5 +11,7 @@ function applyTest(name, type) {
   };
 };
 
-exports['apply keyword'] = applyTest('apply', 'first');
-exports['apply keyword w/o locals'] = applyTest('apply', 'third');
+exports['apply keyword'] = applyTest('apply', 'simple');
+exports['apply keyword - complex'] = applyTest('apply', 'complex');
+exports['apply keyword - non-optimizable '] =
+    applyTest('apply', 'non-optimizable');
