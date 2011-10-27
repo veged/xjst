@@ -1,10 +1,18 @@
 template(this.type === 'first') {
   var fn = apply;
-  return apply(this.type = 'second');
+  this.color = 'blue';
+  local (this.mod = 'bem') {
+    return apply(this.type = 'second');
+  }
 }
 
-template(this.type === 'second') {
+template(this.type === 'second' && this.mod === 'bem' && this.color === 'blue') {
   var we = 'are different';
+  return 'ok';
+}
+
+template(this.type === 'second' && this.mod === 'bem' && this.color === 'red') {
+  var we = 'are different 2';
   return 'ok';
 }
 
