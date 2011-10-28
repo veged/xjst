@@ -15,3 +15,5 @@ exports['apply keyword'] = applyTest('apply', 'simple');
 exports['apply keyword - complex'] = applyTest('apply', 'complex');
 exports['apply keyword - non-optimizable '] =
     applyTest('apply', 'non-optimizable');
+exports['apply keyword - non-optimizable complex '] =
+    applyTest('apply', 'non-optimizable-complex');

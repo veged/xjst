@@ -3,12 +3,12 @@ template(this.type === 'simple') {
 }
 
 template(this.type === 'simple' && this.mod === 'x') {
-  var i = 'am unique!';
+  var i = 'am unique! 1';
   return 'ok';
 }
 
 template(this.type === 'simple' && this.mod === 'y') {
-  var i = 'am unique!';
+  var i = 'am unique! 2';
   return 'ok';
 }
 
@@ -16,16 +16,16 @@ template(this.type === 'complex') {
   var fn = apply;
   this.color = 'red';
   local (this.mod = 'bem') {
-    return apply(this.type = 'complex-2');
+    return apply(this.type = 'complex');
   }
 }
 
-template(this.type === 'complex-2' && this.mod === 'bem' && this.color === 'blue') {
+template(this.type === 'complex' && this.mod === 'bem' && this.color === 'blue') {
   var we = 'are different';
   return 'blue';
 }
 
-template(this.type === 'complex-2' && this.mod === 'bem' && this.color === 'red') {
+template(this.type === 'complex' && this.mod === 'bem' && this.color === 'red') {
   var we = 'are different 2';
   return 'ok';
 }
@@ -38,5 +38,18 @@ template(this.type === 'non-optimizable') {
 
 template(this.type === 'non-optimizable-2') {
   var yeah = 'really';
+  return 'ok';
+}
+
+template(this.type === 'non-optimizable-complex') {
+  // shouldn't be optimized
+  return apply(this.mod = 'a');
+}
+
+template(this.type === 'non-optimizable-complex' && this.mod === 'a') {
+  return 'ok';
+}
+
+template(this.type === 'non-optimizable-complex' && this.mod === 'b') {
   return 'ok';
 }

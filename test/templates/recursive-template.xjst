@@ -1,14 +1,13 @@
 template(this.type === 'simple') {
-  return this.apply.call({
+  return apply.call({
     type: 'slist',
     items: [1,2,3,4]
   })
 }
 
 template(this.type === 'slist') {
-  var self = this;
   return '<ul>' + this.items.map(function(item) {
-    return self.apply.call({ type: 'sitem', value: item });
+    return apply.call({ type: 'sitem', value: item });
   }).join('') + '</ul>';
 }
 
