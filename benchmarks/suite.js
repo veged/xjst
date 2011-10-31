@@ -54,7 +54,9 @@ exports.run = function(options) {
           fn = render(template.xjst, 'benchmarks/' + name),
           defer = Q.defer();
 
-        fn.call(template.data);
+      // Throw exception if compiler was wrong
+      fn.call(template.data);
+
       suite.add(name, function() {
         return fn.call(template.data);
       }, {

@@ -11,7 +11,7 @@ template (this.type === 'list') {
            item[key(1)] = {}, item[key(3)] = {},
            item[key(1)][key(2)] = self[key(1)][key(2)],
            item[key(3)][key(4)] = self[key(3)][key(4)]) {
-      return self.apply.call(item);
+      return apply.call(item);
     }
   }), ['</ul>']);
 }

@@ -1,7 +1,7 @@
 template (this.type === 'list') {
   var self = this;
   return ['<ul>'].concat(this.items.map(function (item) {
-    return self.apply.call(item);
+    return apply.call(item);
   }), ['</ul>']).join('');
 }
 template (this.type === 'item') {
