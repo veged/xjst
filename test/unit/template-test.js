@@ -19,3 +19,11 @@ exports['complex non-recursive template'] =
 exports['simple recursive template'] =
     templateTest('recursive-template', 'simple',
                  '<ul><li>1</li><li>2</li><li>3</li><li>4</li></ul>');
+
+exports['should throw on unexpected'] = function(test) {
+  assert.throws(function() {
+    common.render('non-rec-template').apply.call({ type: 'unexpected' });
+  });
+
+  test.done();
+};
