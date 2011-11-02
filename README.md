@@ -13,13 +13,13 @@ npm install xjst
 
 ## Public API
 
-``javascript
+```javascript
 var xjst = require('xjst');
 
 var fn = xjst.compile('template string', 'filename.xjst', options);
 
 fn({ your: 'data' });
-``
+```
 
 ## Syntax
 
@@ -28,11 +28,11 @@ XJST extends javascript syntax with following keywords: `template`, `local`,
 
 ### Template
 
-``javascript
+```javascript
 template(expression1 === value1 && ... && expressionN === valueN) {
   // will be run if condition above equals to true
 }
-``
+```
 
 Multiple `template` statements will be grouped to construct optimal conditions
 graph. Order of `template` statements matters, priority decreases from bottom to
@@ -40,12 +40,12 @@ top.
 
 ### Local
 
-``javascript
+```javascript
 var x = 1;
 
 console.log(local(x = 2) x); // 2
 console.log(x); // 1
-``
+```
 
 `local` allow you to make temporary changes to visible variable scope. Every
 assignment put inside parens will be reverted immediately after expression
@@ -53,25 +53,25 @@ execution.
 
 You can make multiple assignments:
 
-``javascript
+```javascript
 local(this.x = 2, this.y = 3) ...
-``
+```
 
 Use `local` with block:
 
-``javascript
+```javascript
 local(...) { var a = 1; return a * 2; }
-``
+```
 
 Or as expression:
 
-``javascript
+```javascript
 var newX = local(x = 2) x;
-``
+```
 
 ### Apply
 
-``javascript
+```javascript
 template(true) {
   return apply(this.type = 'first');
 }
@@ -83,7 +83,7 @@ template(this.type === 'first') {
 template(this.type === 'second') {
   return 'here am I';
 }
-``
+```
 
 XJST is intended to be applied recursively to the same data, while making small
 reversible changes to it. `apply` keyword works exactly like local (applying
