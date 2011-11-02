@@ -92,9 +92,62 @@ distinction - `apply` statement doesn't have a body, so it's just doing some
 changes to date and applying template to changed data (context will be
 preserved).
 
+## CLI interface
+
+```bash
+$ bin/xjst --help
+
+Usage:
+  xjst [OPTIONS] [ARGS]
+
+
+Options:
+  -h, --help : Help
+  -i INPUT, --input=INPUT : Input file (default: stdin)
+  -o OUTPUT, --output=OUTPUT : Output file (default: stdout)
+
+$ bin/xjst -i template.xjst
+
+.... some code ...
+```
+
+## Optimizations
+
+XJST takes all `template` statements and produces a tree with comparisons in
+nodes and `template`'s bodies in leafs. `apply` are handled and replaced by
+direct calls to tree's nodes (some of comparisons can be skipped, using
+context's state).
+
+Input:
+
+```
+template(this.type === 'a') {
+  // body 1
+}
+template(this.type === 'b') {
+  // body 2
+}
+```
+
+Output (simplified):
+
+```
+switch (this.type) {
+  case 'a':
+    // body 1
+    break;
+  case 'b':
+    // body 2
+    break;
+}
+```
+
 ## Documentation
 
 Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
 
+#### Links
+
 [1] http://nodejs.org/
+
 [2] https://github.com/veged/ometa-js
