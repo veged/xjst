@@ -1,25 +1,100 @@
 # XJST
 
-XSLT inspired JavaScript templates (with spices).
-Built on [NodeJS](http://nodejs.org) and [OMeta/JS](https://github.com/veged/ometa-js).
+## What is XJST?
+
+XJST is a performance oriented template engine implemented for [node.js](1).
+It's partially inspired by XSLT and built on [ometajs](2).
 
 ## Installation
 
-    npm install xjst
+``bash
+npm install xjst
+``
 
-## Examples
+## Public API
 
-It is still at an early stage of development.
-The easiest and ugly way to look at examples of this:
+``javascript
+var xjst = require('xjst');
 
-    git clone git://github.com/veged/xjst.git
-    make -C xjst tests
-    make -C xjst tests/menu
+var fn = xjst.compile('template string', 'filename.xjst', options);
 
-More low-level details are available in `tests/tests.js`.
+fn({ your: 'data' });
+``
 
-You can also use `bin/xjst` to compile `*.xjst` to CommonJS module.
+## Syntax
+
+XJST extends javascript syntax with following keywords: `template`, `local`,
+`apply`.
+
+### Template
+
+``javascript
+template(expression1 === value1 && ... && expressionN === valueN) {
+  // will be run if condition above equals to true
+}
+``
+
+Multiple `template` statements will be grouped to construct optimal conditions
+graph. Order of `template` statements matters, priority decreases from bottom to
+top.
+
+### Local
+
+``javascript
+var x = 1;
+
+console.log(local(x = 2) x); // 2
+console.log(x); // 1
+``
+
+`local` allow you to make temporary changes to visible variable scope. Every
+assignment put inside parens will be reverted immediately after expression
+execution.
+
+You can make multiple assignments:
+
+``javascript
+local(this.x = 2, this.y = 3) ...
+``
+
+Use `local` with block:
+
+``javascript
+local(...) { var a = 1; return a * 2; }
+``
+
+Or as expression:
+
+``javascript
+var newX = local(x = 2) x;
+``
+
+### Apply
+
+``javascript
+template(true) {
+  return apply(this.type = 'first');
+}
+
+template(this.type === 'first') {
+  return apply({ type: 'second' });
+}
+
+template(this.type === 'second') {
+  return 'here am I';
+}
+``
+
+XJST is intended to be applied recursively to the same data, while making small
+reversible changes to it. `apply` keyword works exactly like local (applying
+changes in parens and reverting them after execution), but with small
+distinction - `apply` statement doesn't have a body, so it's just doing some
+changes to date and applying template to changed data (context will be
+preserved).
 
 ## Documentation
 
 Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
+
+[1] http://nodejs.org/
+[2] https://github.com/veged/ometa-js
