@@ -18,7 +18,7 @@ require('coa').Cmd()
         .end()
     .opt()
         .name('output').title('Output file (default: stdout)')
-        .short('d').long('details')
+        .short('o').long('output')
         .def(process.stdout)
         .act(function(options) {
           if (typeof options.output === 'string') {

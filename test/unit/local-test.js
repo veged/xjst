@@ -16,3 +16,5 @@ exports['simple local expression'] = localTest('local-expr', 'simple');
 exports['complex local expression'] = localTest('local-expr', 'complex');
 exports['simple local statement'] = localTest('local-stmt', 'simple');
 exports['complex local statement'] = localTest('local-stmt', 'complex');
+
+exports['hash local expression'] = localTest('local-expr', 'hash');

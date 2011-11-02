@@ -8,6 +8,16 @@ template(this.type === 'simple') {
   };
 }
 
+template(this.type === 'hash') {
+  this.x = 1;
+  var a = local ({ x: this.x + 2 }) this.x;
+
+  return {
+    x: this.x,
+    a: a
+  };
+}
+
 template(this.type === 'complex') {
   function a() { return 'a'; };
   function c() { return 'c'; };
