@@ -7,9 +7,9 @@ It's partially inspired by XSLT and built on [ometajs](2).
 
 ## Installation
 
-``bash
+```bash
 npm install xjst
-``
+```
 
 ## Public API
 
