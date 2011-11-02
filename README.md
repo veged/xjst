@@ -120,7 +120,7 @@ context's state).
 
 Input:
 
-```
+```javascript
 template(this.type === 'a') {
   // body 1
 }
@@ -131,7 +131,7 @@ template(this.type === 'b') {
 
 Output (simplified):
 
-```
+```javascript
 switch (this.type) {
   case 'a':
     // body 1
@@ -145,6 +145,12 @@ switch (this.type) {
 ## Documentation
 
 Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
+
+#### Authors
+
+[Sergey Berezhnoy](https://github.com/veged),
+[Andrey Mischenko](https://github.com/druxa),
+[Fedor Indutny](https://github.com/indutny).
 
 #### Links
 
