@@ -4,6 +4,20 @@ var fs = require('fs');
 require('coa').Cmd()
     .name(process.argv[1])
     .helpful()
+    .opt() // add some option
+        .name('version')
+        .title('Version')
+        .short('v')
+        .long('version')
+        .only()
+        .flag()
+        .act(function(opts) {
+            // return message as result of action
+            var package = require('fs').readFileSync(__dirname +
+                                                     '/../package.json');
+            return JSON.parse(package).version;
+        })
+        .end()
     .opt()
         .name('input').title('Input file (default: stdin)')
         .short('i').long('input')
