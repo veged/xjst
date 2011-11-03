@@ -1,5 +1,12 @@
 # XJST
 
+```
+ ___ ___    _____  _______  _______
+|   |   | _|     ||     __||_     _|
+|-     -||       ||__     |  |   |
+|___|___||_______||_______|  |___|
+```
+
 ## What is XJST?
 
 XJST is a performance oriented template engine implemented for [node.js](1).
