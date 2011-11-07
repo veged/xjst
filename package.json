@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "coa": "0.2.x",
-    "ometajs": "~ 2.0.11",
+    "ometajs": "2.1.x",
     "uglify-js": "1.1.x"
   },
   "devDependencies": {
