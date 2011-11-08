@@ -23,9 +23,7 @@ require('coa').Cmd()
         .short('i').long('input')
         .def(process.stdin)
         .act(function(options) {
-          if (typeof options.input === 'string') {
-            options.input = fs.createReadStream(options.input);
-          } else {
+          if (typeof options.input !== 'string') {
             options.input.resume();
           }
         })
@@ -34,11 +32,6 @@ require('coa').Cmd()
         .name('output').title('Output file (default: stdout)')
         .short('o').long('output')
         .def(process.stdout)
-        .act(function(options) {
-          if (typeof options.output === 'string') {
-            options.output = fs.createWriteStream(options.output);
-          }
-        })
         .end()
     .act(function(options) {
       require('../lib/xjst').run(options);
