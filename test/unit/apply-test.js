@@ -17,3 +17,5 @@ exports['apply keyword - non-optimizable '] =
     applyTest('apply', 'non-optimizable');
 exports['apply keyword - non-optimizable complex '] =
     applyTest('apply', 'non-optimizable-complex');
+exports['apply keyword - invalidating nested'] =
+    applyTest('apply', 'invalidating');
