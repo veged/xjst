@@ -1,0 +1,2 @@
+template(this.x === 1) { return 'wrong' }
+template(this.x === 1) { return 'ok' }
