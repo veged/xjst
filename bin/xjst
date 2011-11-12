@@ -4,7 +4,7 @@ var fs = require('fs');
 require('coa').Cmd()
     .name(process.argv[1])
     .helpful()
-    .opt() // add some option
+    .opt()
         .name('version')
         .title('Version')
         .short('v')
@@ -17,6 +17,12 @@ require('coa').Cmd()
                                                      '/../package.json');
             return JSON.parse(package).version;
         })
+        .end()
+    .opt()
+        .name('no-opt')
+        .title('No optimization (just render locals and templates to js)')
+        .long('no-opt')
+        .flag()
         .end()
     .opt()
         .name('input').title('Input file (default: stdin)')
