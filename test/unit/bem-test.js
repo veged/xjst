@@ -22,8 +22,9 @@ exports['some bem template'] = function(test) {
     }]
   };
   var expected = fs.readFileSync(__dirname + '/../templates/bem-bl.html')
-                   .toString();
+                   .toString(),
+      rendered = common.render('bem-bl').apply.call(c);
 
-  assert.equal(common.render('bem-bl').apply.call(c) + '\n', expected);
+  assert.equal(rendered + '\n', expected);
   test.done();
 };
