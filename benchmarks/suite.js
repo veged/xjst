@@ -7,11 +7,14 @@ var benchmark = require('benchmark'),
 
     xjst = require('../lib/xjst');
 
-function render(input, file) {
-  return typeof input.apply === 'function' ? input.apply : xjst.compile(input, file).apply;
-}
-
 exports.run = function(options) {
+  function render(input, file) {
+    return typeof input.apply === 'function' ?
+        input.apply
+        :
+        xjst.compile(input, file, options).apply;
+  };
+
   console.log([
     '',
     '  XX      XX       JJ     SSSSSSS   TTTTTTTTTT',
