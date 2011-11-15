@@ -11,15 +11,21 @@ common.render = function(name) {
   var sg = xjst.compile(template, name, { engine: 'sort-group' }),
       fg = xjst.compile(template, name, { engine: 'fullgen' });
 
-  fg.apply.call = function(context) {
-    var results = [
-      sg.apply.call(context),
-      fg.apply.apply(context)
-    ];
+  var apply = fg.apply;
 
-    assert.deepEqual(results[0], results[1]);
+  fg.apply = {
+    call: function(context) {
+      fg.apply = apply;
 
-    return results[0];
+      var results = [
+        sg.apply.call(context),
+        fg.apply.call(context)
+      ];
+
+      assert.deepEqual(results[0], results[1]);
+
+      return results[0];
+    }
   };
 
   return fg;
