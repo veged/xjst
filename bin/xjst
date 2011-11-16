@@ -41,7 +41,7 @@ require('coa').Cmd()
         .short('i').long('input')
         .def(null)
         .act(function(options) {
-          if (typeof options.input !== 'string') {
+          if (options.input === null) {
             options.input = process.stdin;
             process.stdin.resume();
           }
