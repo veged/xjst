@@ -12,3 +12,8 @@ exports['order test'] = function(test) {
 
   test.done();
 };
+
+exports['redefine test'] = function(test) {
+  assert.equal(common.render('redefine').apply.call({x: 1}), 'ok');
+  test.done();
+};
