@@ -39,10 +39,11 @@ require('coa').Cmd()
     .opt()
         .name('input').title('Input file (default: stdin)')
         .short('i').long('input')
-        .def(process.stdin)
+        .def(null)
         .act(function(options) {
           if (typeof options.input !== 'string') {
-            options.input.resume();
+            options.input = process.stdin;
+            process.stdin.resume();
           }
         })
         .end()
