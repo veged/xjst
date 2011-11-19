@@ -4,12 +4,20 @@ var common = exports,
     fs = require('fs'),
     xjst = require('../../lib/xjst');
 
-common.render = function(name) {
+common.render = function(name, options) {
+  options || (options = {});
+
   var filename = path.resolve(__dirname + '/../templates/' + name),
       template = fs.readFileSync(filename + '.xjst').toString();
 
-  var sg = xjst.compile(template, name, { engine: 'sort-group' }),
-      fg = xjst.compile(template, name, { engine: 'fullgen' });
+  var sg = xjst.compile(template, name, {
+        engine: 'sort-group',
+        merge: options.merge
+      }),
+      fg = xjst.compile(template, name, {
+        engine: 'fullgen',
+        merge: options.merge
+      });
 
   var apply = fg.apply;
 
