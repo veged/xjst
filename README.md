@@ -5,8 +5,8 @@
 
 ## What is XJST?
 
-XJST is a performance oriented template engine implemented for [node.js](1).
-It's partially inspired by XSLT and built on [ometajs](2).
+XJST is a performance oriented template engine implemented for [node.js][1].
+It's partially inspired by XSLT and built on [ometajs][2].
 
 ## Installation
 
@@ -147,6 +147,8 @@ switch (this.type) {
 
 ## Documentation
 
+Documented source is available [here][3]
+
 Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
 
 #### Authors
@@ -155,8 +157,6 @@ Some technical details (in Russian) can be found in [doc/tech.ru.md](https://git
 [Andrey Mischenko](https://github.com/druxa),
 [Fedor Indutny](https://github.com/indutny).
 
-#### Links
-
-[1] http://nodejs.org/
-
-[2] https://github.com/veged/ometa-js
+[1]: http://nodejs.org/
+[2]: https://github.com/veged/ometa-js
+[3]: http://veged.github.com/xjst/
