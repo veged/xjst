@@ -147,7 +147,7 @@ switch (this.type) {
 
 ## Documentation
 
-Documented source is available [here][3]
+Documented source is available [here][3].
 
 Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
 
