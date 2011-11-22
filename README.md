@@ -147,9 +147,9 @@ switch (this.type) {
 
 ## Documentation
 
-Documented source is available [here][3].
+Here is [documented source][3].
 
-Some technical details (in Russian) can be found in [doc/tech.ru.md](https://github.com/veged/xjst/blob/master/doc/tech.ru.md).
+Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 
 #### Authors
 
@@ -160,3 +160,4 @@ Some technical details (in Russian) can be found in [doc/tech.ru.md](https://git
 [1]: http://nodejs.org/
 [2]: https://github.com/veged/ometa-js
 [3]: http://veged.github.com/xjst/
+[4]: https://github.com/veged/xjst/blob/master/doc/tech.ru.md
