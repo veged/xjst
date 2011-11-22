@@ -12,4 +12,7 @@ test:
 benchmark: *
 	bin/benchmark --details
 
+docs:
+	docco lib/xjst/*.js lib/xjst/engines/*.js
+
 .PHONY: all test clean FORCE

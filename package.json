@@ -26,6 +26,7 @@
   "devDependencies": {
     "benchmark": "0.2.x",
     "cliff": "0.1.x",
+    "docco": "0.3.x",
     "microtime": "0.1.x",
     "nodeunit": "0.5.x",
     "q": "0.7.x",
