@@ -1,0 +1,403 @@
+<!DOCTYPE html>  <html> <head>   <title>compiler.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="cli.html">                 cli.js               </a>                                           <a class="source" href="compiler.html">                 compiler.js               </a>                                           <a class="source" href="fullgen.html">                 fullgen.js               </a>                                           <a class="source" href="sort-group.html">                 sort-group.js               </a>                                           <a class="source" href="utils.html">                 utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               compiler.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">xjst</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../xjst&#39;</span><span class="p">),</span>
+    <span class="nx">vm</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;vm&#39;</span><span class="p">),</span>
+    <span class="nx">uglify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;uglify-js&#39;</span><span class="p">),</span>
+    <span class="nx">utils</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">utils</span><span class="p">,</span>
+
+    <span class="nx">XJSTParser</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">ometa</span><span class="p">.</span><span class="nx">XJSTParser</span><span class="p">,</span>
+    <span class="nx">XJSTTranslator</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">ometa</span><span class="p">.</span><span class="nx">XJSTTranslator</span><span class="p">,</span>
+    <span class="nx">XJSTCompiler</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">ometa</span><span class="p">.</span><span class="nx">XJSTCompiler</span><span class="p">,</span>
+    <span class="nx">XJSTLocalAndApplyCompiler</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">ometa</span><span class="p">.</span><span class="nx">XJSTLocalAndApplyCompiler</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>function parse (code)</h3>
+
+<h4>@code {String} XJST source</h4>
+
+<p>Returns AST for input string</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">parse</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">tree</span> <span class="o">=</span> <span class="nx">XJSTParser</span><span class="p">.</span><span class="nx">matchAll</span><span class="p">(</span><span class="nx">code</span><span class="p">,</span> <span class="s1">&#39;topLevel&#39;</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">,</span>
+                                 <span class="nx">utils</span><span class="p">.</span><span class="nx">errorHandler</span><span class="p">(</span><span class="nx">code</span><span class="p">));</span>
+
+  <span class="k">return</span>  <span class="nx">XJSTTranslator</span><span class="p">.</span><span class="nx">matchAll</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="s1">&#39;topLevel&#39;</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">,</span>
+                                  <span class="nx">utils</span><span class="p">.</span><span class="nx">errorHandler</span><span class="p">(</span><span class="nx">tree</span><span class="p">));</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>function generate (ast, options)</h3>
+
+<h4>@ast {Array} XJST-specific AST</h4>
+
+<h4>@options {Object} compiler options</h4>
+
+<p>Compile XJST template and return it's source code (in javascript)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">generate</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">generate</span><span class="p">(</span><span class="nx">ast</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">templates</span> <span class="o">=</span> <span class="nx">ast</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+      <span class="nx">predicateMap</span> <span class="o">=</span> <span class="p">{},</span>
+      <span class="nx">predicateChilds</span> <span class="o">=</span> <span class="p">{},</span>
+
+      <span class="nx">hashs</span> <span class="o">=</span> <span class="p">{},</span>
+      <span class="nx">fns</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Set default options</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">)</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">wrap</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="nx">options</span><span class="p">.</span><span class="nx">wrap</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">merge</span> <span class="o">!==</span> <span class="kc">true</span><span class="p">)</span> <span class="nx">options</span><span class="p">.</span><span class="nx">merge</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="nx">templates</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">template</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">template</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">predicate</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">predicateMap</span><span class="p">[</span><span class="nx">predicate</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="p">{</span>
+        <span class="nx">predicateMap</span><span class="p">[</span><span class="nx">predicate</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">predicate</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="kd">var</span> <span class="nx">predicateIds</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">predicateMap</span><span class="p">),</span>
+      <span class="nx">merges</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="kd">function</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">tag</span> <span class="o">===</span> <span class="s1">&#39;unexpected&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="s1">&#39;e&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">merge</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s1">&#39;_c.$&#39;</span> <span class="o">+</span> <span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s1">&#39;$&#39;</span> <span class="o">+</span> <span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Render part of tree</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">serialize</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">_parents</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">getParents</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">_parents</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;$&#39;</span> <span class="o">+</span> <span class="nx">parent</span><span class="p">;</span>
+      <span class="p">}));</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">parents</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">options</span><span class="p">.</span><span class="nx">merge</span> <span class="o">?</span> <span class="nx">_parents</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">longId</span> <span class="o">||</span> <span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="o">:</span> <span class="nx">_parents</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">merges</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">tails</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">o</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">merge</span> <span class="o">&amp;&amp;</span> <span class="nx">o</span><span class="p">.</span><span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span>
+          <span class="s1">&#39;return &#39;</span><span class="p">,</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="s1">&#39;.call(this,&#39;</span><span class="p">,</span>
+          <span class="nx">getParents</span><span class="p">(),</span>
+          <span class="s1">&#39;);&#39;</span>
+        <span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;return &#39;</span> <span class="o">+</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.call(this);&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">cases</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+            <span class="s1">&#39;if (&#39;</span><span class="p">,</span>
+            <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">],</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">),</span>
+            <span class="s1">&#39; === &#39;</span><span class="p">,</span>
+            <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">),</span> <span class="s1">&#39;) {\n&#39;</span><span class="p">,</span>
+                <span class="nx">serialize</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">parents</span><span class="p">()),</span>
+            <span class="s1">&#39;} else {\n&#39;</span><span class="p">,</span>
+                <span class="nx">serialize</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">parents</span><span class="p">()),</span>
+            <span class="s1">&#39;}\n&#39;</span>
+        <span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>TODO: determine optimal cases' length maximum</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+          <span class="s1">&#39;var __t = &#39;</span><span class="p">,</span>
+          <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">],</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">),</span>
+          <span class="s1">&#39;; \n&#39;</span>
+        <span class="p">);</span>
+
+        <span class="nx">o</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39; else &#39;</span><span class="p">);</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+            <span class="s1">&#39;  if (__t === &#39;</span><span class="p">,</span> <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">),</span> <span class="s1">&#39;) {\n&#39;</span><span class="p">,</span>
+            <span class="nx">serialize</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">parents</span><span class="p">()),</span>
+            <span class="s1">&#39;  } \n&#39;</span>
+          <span class="p">);</span>
+        <span class="p">});</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+          <span class="s1">&#39; else {\n&#39;</span><span class="p">,</span>
+          <span class="nx">serialize</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">parents</span><span class="p">()),</span>
+          <span class="s1">&#39;}&#39;</span>
+        <span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">hashs</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">map</span><span class="o">:</span> <span class="p">{},</span>
+          <span class="s1">&#39;default&#39;</span><span class="o">:</span> <span class="nx">serialize</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">parents</span><span class="p">())</span>
+        <span class="p">};</span>
+
+        <span class="nx">o</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">hash</span><span class="p">.</span><span class="nx">map</span><span class="p">[</span><span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">)]</span> <span class="o">=</span>
+              <span class="nx">serialize</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">tails</span><span class="p">,</span> <span class="nx">parents</span><span class="p">());</span>
+        <span class="p">});</span>
+
+        <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+          <span class="s1">&#39;return (__h&#39;</span><span class="p">,</span> <span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;.m[&#39;</span><span class="p">,</span>
+          <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">],</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">),</span>
+          <span class="s1">&#39;] ||&#39;</span><span class="p">,</span> <span class="s1">&#39;__h&#39;</span><span class="p">,</span> <span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;.d).call(this)&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nx">fns</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">body</span><span class="o">:</span> <span class="nx">res</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="nx">alt</span><span class="o">:</span> <span class="nx">o</span><span class="p">.</span><span class="nx">longId</span> <span class="p">};</span>
+
+      <span class="nx">res</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;return &#39;</span><span class="p">,</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="s1">&#39;.call(this);&#39;</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">stmt</span><span class="p">,</span> <span class="s1">&#39;skipBraces&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;;\nreturn;&#39;</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">size</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="nx">o</span><span class="p">.</span><span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">fns</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">body</span><span class="o">:</span> <span class="nx">body</span><span class="p">,</span> <span class="nx">alt</span><span class="o">:</span> <span class="nx">o</span><span class="p">.</span><span class="nx">longId</span> <span class="p">};</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+              <span class="s1">&#39;return &#39;</span><span class="p">,</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="s1">&#39;.call(this,&#39;</span><span class="p">,</span>
+              <span class="nx">getParents</span><span class="p">(),</span> <span class="s1">&#39;);&#39;</span>
+          <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;return &#39;</span><span class="p">,</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="s1">&#39;.call(this);&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">shiftTails</span><span class="p">(</span><span class="nx">tails</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ids</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">tails</span><span class="p">).</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span><span class="p">;</span> <span class="p">}),</span>
+        <span class="nx">res</span> <span class="o">=</span> <span class="nx">tails</span><span class="p">[</span><span class="nx">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]];</span>
+
+    <span class="k">delete</span> <span class="nx">tails</span><span class="p">[</span><span class="nx">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]];</span>
+
+    <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">detectJoins</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="nx">joins</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">joins</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">joins</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">joins</span><span class="p">[</span><span class="nx">o</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">o</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span> <span class="nx">detectJoins</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">joins</span><span class="p">);</span> <span class="p">});</span>
+          <span class="nx">detectJoins</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="nx">joins</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">joins</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">serializeTop</span><span class="p">(</span><span class="nx">prog</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">heads</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">joins</span> <span class="o">=</span> <span class="nx">detectJoins</span><span class="p">(</span><span class="nx">prog</span><span class="p">,</span> <span class="p">{});</span>
+
+    <span class="kd">var</span> <span class="nx">labels</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">joins</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">joins</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">!==</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}).</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">b</span> <span class="o">-</span> <span class="nx">a</span><span class="p">;</span> <span class="p">});</span>
+
+    <span class="nx">labels</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">merges</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="kd">var</span> <span class="nx">tails</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">tails</span><span class="p">[</span><span class="nx">prog</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">prog</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">first</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">id</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">shiftTails</span><span class="p">(</span><span class="nx">tails</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">delete</span> <span class="nx">merges</span><span class="p">[</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">id</span><span class="p">];</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">first</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">first</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">serialize</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">tails</span><span class="p">,</span> <span class="p">[]));</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="nx">serialize</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">tails</span><span class="p">,</span> <span class="p">[]);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fns</span><span class="p">[</span><span class="nx">id</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">fns</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">body</span><span class="o">:</span> <span class="nx">body</span><span class="p">,</span> <span class="nx">alt</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">longId</span><span class="p">};</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">merge</span> <span class="o">?</span> <span class="s1">&#39;var _c = exports.config = {};&#39;</span> <span class="o">+</span>
+      <span class="s1">&#39;exports.mergeWith = &#39;</span> <span class="o">+</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">mergeWith</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;exports.apply = apply;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;function apply() {&#39;</span>
+    <span class="p">].</span><span class="nx">concat</span><span class="p">(</span>
+        <span class="nx">heads</span><span class="p">.</span><span class="nx">reverse</span><span class="p">(),</span> <span class="nx">res</span><span class="p">,</span> <span class="s1">&#39;};&#39;</span><span class="p">,</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">hashs</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;var __h&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39; = {\n&#39;</span><span class="p">];</span>
+
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  &quot;m&quot;: {\n&#39;</span><span class="p">);</span>
+
+          <span class="kd">var</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">map</span><span class="p">).</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="sr">/^\&quot;.*\&quot;$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+                  <span class="nx">acc</span><span class="p">.</span><span class="nx">others</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                  <span class="nx">acc</span><span class="p">.</span><span class="nx">numeric</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+              <span class="p">},</span> <span class="p">{</span> <span class="nx">numeric</span><span class="o">:</span> <span class="p">[],</span> <span class="nx">others</span><span class="o">:</span> <span class="p">[]</span> <span class="p">});</span>
+
+          <span class="nx">keys</span><span class="p">.</span><span class="nx">others</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+              <span class="s1">&#39;    &#39;</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span>
+              <span class="s1">&#39;: function() {&#39;</span><span class="p">,</span>
+              <span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">map</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="s1">&#39;},&#39;</span>
+            <span class="p">);</span>
+          <span class="p">});</span>
+
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  },\n&#39;</span><span class="p">);</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  &quot;d&quot;: function() {&#39;</span><span class="p">,</span> <span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s1">&#39;}&#39;</span><span class="p">);</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;};\n&#39;</span><span class="p">);</span>
+
+          <span class="nx">keys</span><span class="p">.</span><span class="nx">numeric</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+              <span class="s1">&#39;__h&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;.m[&#39;</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="s1">&#39;] = function() {&#39;</span><span class="p">,</span>
+              <span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">map</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="s1">&#39;};\n&#39;</span>
+            <span class="p">);</span>
+          <span class="p">});</span>
+
+          <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+        <span class="p">}),</span>
+        <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">fns</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">fns</span><span class="p">[</span><span class="nx">id</span><span class="p">],</span>
+              <span class="nx">prefix</span><span class="p">;</span>
+
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">merge</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">prefix</span> <span class="o">=</span> <span class="s1">&#39;function &#39;</span> <span class="o">+</span> <span class="nx">fnName</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="nx">id</span><span class="p">})</span> <span class="o">+</span> <span class="s1">&#39;() {&#39;</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fn</span><span class="p">.</span><span class="nx">alt</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">prefix</span> <span class="o">=</span> <span class="nx">fnName</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">id</span> <span class="p">})</span> <span class="o">+</span> <span class="s1">&#39; = function() {&#39;</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">prefix</span> <span class="o">=</span> <span class="nx">fnName</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">alt</span> <span class="p">})</span> <span class="o">+</span> <span class="s1">&#39; = &#39;</span> <span class="o">+</span>
+                     <span class="nx">fnName</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">id</span> <span class="p">})</span> <span class="o">+</span> <span class="s1">&#39; = function() {&#39;</span><span class="p">;</span>
+          <span class="p">}</span>
+
+          <span class="k">return</span> <span class="nx">prefix</span>  <span class="o">+</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">body</span> <span class="o">+</span> <span class="s1">&#39;};&#39;</span><span class="p">;</span>
+        <span class="p">})</span>
+    <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">optimizeRecursion</span><span class="p">(</span><span class="nx">tree</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Update predicates with data in local</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">applies</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">reduceTree</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">node</span><span class="p">.</span><span class="nx">stmt</span><span class="p">)</span> <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">_visited</span><span class="p">)</span> <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+
+      <span class="nx">node</span><span class="p">.</span><span class="nx">_visited</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">seq</span> <span class="o">=</span> <span class="nx">XJSTLocalAndApplyCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">stmt</span><span class="p">,</span> <span class="s1">&#39;topLevel&#39;</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">seq</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">locals</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">seq</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">op</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">op</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;apply&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">state</span><span class="p">);</span>
+
+          <span class="nx">locals</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">local</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">local</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">as</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="nx">as</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;reset&#39;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">delete</span> <span class="nx">state</span><span class="p">[</span><span class="nx">predicateMap</span><span class="p">[</span><span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">]]];</span>
+              <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">state</span><span class="p">[</span><span class="nx">predicateMap</span><span class="p">[</span><span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">as</span><span class="p">[</span><span class="mi">2</span><span class="p">])];</span>
+              <span class="p">}</span>
+
+              <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">predicateChilds</span><span class="p">[</span><span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">pred</span> <span class="o">=</span> <span class="nx">predicateMap</span><span class="p">[</span><span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">]];</span>
+                <span class="nx">predicateChilds</span><span class="p">[</span><span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">predicateIds</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+                  <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+                  <span class="k">return</span> <span class="nx">predicateMap</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">pred</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="p">});</span>
+              <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Remove all nested predicates from state
+Like if <code>as</code> is <code>this.x</code> - remove <code>this.x.y</code>
+see #2 for details</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="nx">predicateChilds</span><span class="p">[</span><span class="nx">as</span><span class="p">[</span><span class="mi">0</span><span class="p">]].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">delete</span> <span class="nx">state</span><span class="p">[</span><span class="nx">predicateMap</span><span class="p">[</span><span class="nx">id</span><span class="p">]];</span>
+              <span class="p">});</span>
+            <span class="p">});</span>
+          <span class="p">});</span>
+
+          <span class="nx">acc</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+            <span class="nx">node</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span>
+            <span class="nx">op</span><span class="o">:</span> <span class="nx">op</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="nx">state</span><span class="o">:</span> <span class="nx">state</span>
+          <span class="p">});</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">op</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;localStart&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">locals</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">op</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">locals</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+    <span class="p">},</span> <span class="p">[]);</span>
+
+    <span class="nx">applies</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">apply</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>If nothing was changed before .apply call</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">apply</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">state</span><span class="p">)</span> <span class="o">===</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">apply</span><span class="p">.</span><span class="nx">state</span><span class="p">))</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Skip this apply as it can't be optimized</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">reduceTree</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Apply should not redirect to itself</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">apply</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">score</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">compareSets</span><span class="p">(</span><span class="nx">apply</span><span class="p">.</span><span class="nx">state</span><span class="p">,</span> <span class="nx">node</span><span class="p">.</span><span class="nx">state</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">score</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">score</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">score</span> <span class="o">&lt;</span> <span class="nx">acc</span><span class="p">.</span><span class="nx">score</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">acc</span><span class="p">.</span><span class="nx">score</span> <span class="o">=</span> <span class="nx">score</span><span class="p">;</span>
+          <span class="nx">acc</span><span class="p">.</span><span class="nx">node</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+      <span class="p">},</span> <span class="p">{</span> <span class="nx">score</span><span class="o">:</span> <span class="kc">Infinity</span><span class="p">,</span> <span class="nx">node</span><span class="o">:</span> <span class="kc">null</span> <span class="p">});</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">node</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+      <span class="nx">result</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">fn</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+      <span class="nx">apply</span><span class="p">.</span><span class="nx">op</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="nx">fnName</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">node</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.call(this)&#39;</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">tree</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">body</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">[</span><span class="s1">&#39;no-opt&#39;</span><span class="p">])</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Just compile <code>template</code> to <code>if</code>, and <code>local</code></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">body</span> <span class="o">=</span> <span class="p">[</span> <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">ast</span><span class="p">,</span> <span class="s1">&#39;topLevel&#39;</span><span class="p">)</span> <span class="p">];</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Optimize recursion and minimize comparisons tree</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">engine</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">engines</span><span class="p">[</span><span class="nx">options</span><span class="p">.</span><span class="nx">engine</span><span class="p">]</span> <span class="o">||</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">engines</span><span class="p">.</span><span class="nx">fullgen</span><span class="p">,</span>
+        <span class="nx">tree</span> <span class="o">=</span> <span class="nx">optimizeRecursion</span><span class="p">(</span><span class="nx">engine</span><span class="p">(</span><span class="nx">templates</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">predicateMap</span><span class="p">));</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Finally render tree</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">body</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">ast</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;other&#39;</span><span class="p">),</span>
+      <span class="nx">serializeTop</span><span class="p">(</span><span class="nx">tree</span><span class="p">)</span>
+    <span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">result</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">wrap</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;(function(exports) {&#39;</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span>
+      <span class="nx">body</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">),</span>
+      <span class="s1">&#39;return exports})(typeof exports === &quot;undefined&quot;? {} : exports)&#39;</span>
+    <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="nx">body</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">uglify</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">uglify</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">uglify</span><span class="p">.</span><span class="nx">uglify</span><span class="p">.</span><span class="nx">gen_code</span><span class="p">(</span><span class="nx">uglify</span><span class="p">.</span><span class="nx">parser</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">result</span><span class="p">),</span>
+                                  <span class="p">{</span> <span class="nx">beautify</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>function compile(code, filename, options)</h3>
+
+<h4>@code {String} Input XJST source</h4>
+
+<h4>@filename {String} Optional filename for better stack traces</h4>
+
+<h4>@options {Object} Compilation options</h4>
+
+<p>Parses and compiles XJST template to javascript function</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">compile</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">compile</span><span class="p">(</span><span class="nx">code</span><span class="p">,</span> <span class="nx">filename</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>XXX this is temporary fix to make API compatible</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">code</span><span class="p">))</span> <span class="k">return</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">generate</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>filename is optional argument</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="nx">options</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">filename</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">filename</span><span class="p">;</span>
+    <span class="nx">filename</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">parsed</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">code</span><span class="p">),</span>
+      <span class="nx">compiled</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">generate</span><span class="p">(</span><span class="nx">parsed</span><span class="p">,</span> <span class="nx">options</span><span class="p">),</span>
+      <span class="nx">evaluated</span> <span class="o">=</span> <span class="nx">vm</span><span class="p">.</span><span class="nx">runInThisContext</span><span class="p">(</span><span class="nx">compiled</span><span class="p">,</span> <span class="nx">filename</span><span class="p">);</span>
+
+  <span class="kd">function</span> <span class="nx">render</span><span class="p">(</span><span class="nx">locals</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">evaluated</span><span class="p">.</span><span class="nx">apply</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">locals</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">.</span><span class="nx">apply</span> <span class="o">=</span> <span class="nx">evaluated</span><span class="p">.</span><span class="nx">apply</span><span class="p">;</span>
+  <span class="nx">render</span><span class="p">.</span><span class="nx">mergeWith</span> <span class="o">=</span> <span class="nx">evaluated</span><span class="p">.</span><span class="nx">mergeWith</span><span class="p">;</span>
+  <span class="nx">render</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="nx">evaluated</span><span class="p">.</span><span class="nx">config</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">render</span><span class="p">;</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,206 @@
+<!DOCTYPE html>  <html> <head>   <title>utils.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="cli.html">                 cli.js               </a>                                           <a class="source" href="compiler.html">                 compiler.js               </a>                                           <a class="source" href="fullgen.html">                 fullgen.js               </a>                                           <a class="source" href="sort-group.html">                 sort-group.js               </a>                                           <a class="source" href="utils.html">                 utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               utils.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">utils</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">,</span>
+    <span class="nx">crypto</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;crypto&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>function sha1 (value)</h3>
+
+<h4>@value {String|Buffer} Input data</h4>
+
+<p>Returns hex digest of sha1 hash of input data</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">sha1</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">sha1</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">).</span><span class="nx">update</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">digest</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>function hashName (value)</h3>
+
+<h4>@value {String} Input data</h4>
+
+<p>Returns valid name for javascript variable (based on input's md5 hash)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">hashName</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">hashName</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="s1">&#39;md5&#39;</span><span class="p">).</span><span class="nx">update</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">digest</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Replace base64 specific chars</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">hash</span> <span class="o">=</span> <span class="nx">hash</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\+/g</span><span class="p">,</span> <span class="s1">&#39;$&#39;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\//g</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Remove padding</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">hash</span> <span class="o">=</span> <span class="nx">hash</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/=+$/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="sr">/^[0-9]/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">hash</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">hash</span> <span class="o">=</span> <span class="s1">&#39;$&#39;</span> <span class="o">+</span> <span class="nx">hash</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">hash</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>function mergeWith (template)</h3>
+
+<h4>@template {Object} Another template</h4>
+
+<p>Template function for compiled XJST</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">mergeWith</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">mergeWith</span><span class="p">(</span><span class="nx">template</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="nx">_c</span><span class="p">.</span><span class="nx">$e</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parents</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="nx">fn</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">match</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">parents</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">template</span><span class="p">.</span><span class="nx">config</span><span class="p">[</span><span class="nx">parents</span><span class="p">[</span><span class="nx">i</span><span class="p">]])</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">cache</span><span class="p">[</span><span class="nx">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">parents</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">fn</span> <span class="o">=</span> <span class="nx">template</span><span class="p">.</span><span class="nx">config</span><span class="p">[</span><span class="nx">parents</span><span class="p">[</span><span class="nx">i</span><span class="p">]];</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fn</span> <span class="o">=</span> <span class="nx">template</span><span class="p">.</span><span class="nx">apply</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">fn</span> <span class="o">=</span> <span class="nx">template</span><span class="p">.</span><span class="nx">config</span><span class="p">[</span><span class="nx">match</span><span class="p">]</span> <span class="o">||</span> <span class="nx">template</span><span class="p">.</span><span class="nx">apply</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>function compareArrays (source, target)</h3>
+
+<h4>@source {Array} Source array</h4>
+
+<h4>@target {Array} Target array</h4>
+
+<p>Check if target array has all elements from source</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">function</span> <span class="nx">compareArrays</span><span class="p">(</span><span class="nx">source</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">reverse</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">source</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">target</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">reverse</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">source</span><span class="p">;</span>
+    <span class="nx">source</span> <span class="o">=</span> <span class="nx">target</span><span class="p">;</span>
+    <span class="nx">target</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">source</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">target</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">elem</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">});</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>function compareSets (source, target)</h3>
+
+<h4>@source {Object} Source state</h4>
+
+<h4>@target {Object} Target state</h4>
+
+<p>Returns zero if sets are equal, null if sets are completely different,
+positive value if source has all props/values of target,
+and otherwise negative</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">compareSets</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">source</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">keys</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">source</span><span class="o">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">source</span><span class="p">),</span>
+        <span class="nx">target</span><span class="o">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span>
+      <span class="p">},</span>
+      <span class="nx">reverse</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">reverse</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">source</span><span class="p">;</span>
+    <span class="nx">source</span> <span class="o">=</span> <span class="nx">target</span><span class="p">;</span>
+    <span class="nx">target</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">source</span><span class="p">;</span>
+    <span class="nx">keys</span><span class="p">.</span><span class="nx">source</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">target</span><span class="p">;</span>
+    <span class="nx">keys</span><span class="p">.</span><span class="nx">target</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">nested</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">target</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>If target[key] array is nested in source[key]</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">compareArrays</span><span class="p">(</span><span class="nx">target</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">source</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">nested</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">reverse</span> <span class="o">?</span>
+      <span class="nx">keys</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">length</span>
+      <span class="o">:</span>
+      <span class="nx">keys</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>function clone (object, stringify)</h3>
+
+<h4>@object {Object} Source object</h4>
+
+<h4>@stringify {bool} Stringify values flag</h4>
+
+<p>Creates new Object instance and copies all properties from <code>object</code> to it
+(Stringifies all properties' values if flag was set to true)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">clone</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">clone</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">stringify</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">stringify</span> <span class="o">&amp;&amp;</span> <span class="nx">object</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="nx">result</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">stringify</span> <span class="o">?</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">object</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">:</span> <span class="nx">object</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>function cloneChanged (object, key, value)</h3>
+
+<h4>@object {Object} Source object</h4>
+
+<h4>@key {String} Name of property to set</h4>
+
+<h4>@value {String} Value of property</h4>
+
+<p>Clones object and sets property to <code>value</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">cloneChanged</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">cloneChanged</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+
+  <span class="nx">result</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3>function reduceTree (tree, fn, acc)</h3>
+
+<h4>@tree {Array} AST</h4>
+
+<h4>@fn {Function} Iterator function</h4>
+
+<h4>@acc {any} Initial value</h4>
+
+<p>Traverses AST and calls <code>fn</code> for each node, replacing initial value with fn's
+return value</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">reduceTree</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">reduceTree</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">acc</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">])</span> <span class="p">{</span>
+    <span class="nx">acc</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">tree</span><span class="p">);</span>
+
+    <span class="nx">acc</span> <span class="o">=</span> <span class="nx">tree</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">reduceTree</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">acc</span><span class="p">);</span>
+    <span class="p">},</span> <span class="nx">acc</span><span class="p">);</span>
+    <span class="nx">acc</span> <span class="o">=</span> <span class="nx">reduceTree</span><span class="p">(</span><span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">acc</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">acc</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">tree</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3>function Identifier ()</h3>
+
+<p>Object identifier, can be used for enumerating set of objects</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">function</span> <span class="nx">Identifier</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">cache</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="p">}</span>
+<span class="nx">utils</span><span class="p">.</span><span class="nx">Identifier</span> <span class="o">=</span> <span class="nx">Identifier</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>function identify (obj)</h3>
+
+<h4>@obj {any}</h4>
+
+<p>Returns numeric identificator of passed object</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Identifier</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">identify</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">identify</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span>
+      <span class="nx">key</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">cache</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>function generate ()</h3>
+
+<p>Bumps and returns unique counter</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Identifier</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">generate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">++</span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h3>function stringify (v)</h3>
+
+<h4>@v {any}</h4>
+
+<p>Converts value to string (via JSON.stringify) if it's not already string
+(or undefined)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">stringify</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">stringify</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">v</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="k">return</span> <span class="s1">&#39;undefined&#39;</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="k">typeof</span> <span class="nx">v</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">:</span> <span class="nx">v</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h3>function errorHandler (source)</h3>
+
+<h4>@source {String} source code</h4>
+
+<p>Internal function. Should be moved to ometajs</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">utils</span><span class="p">.</span><span class="nx">errorHandler</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">errorHandler</span><span class="p">(</span><span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">err</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Match failed &#39;</span> <span class="o">+</span> <span class="nx">source</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">15</span><span class="p">,</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">15</span><span class="p">));</span>
+    <span class="nx">err</span><span class="p">.</span><span class="nx">errorPos</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+
+    <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
