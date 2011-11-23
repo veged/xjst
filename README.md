@@ -10,9 +10,9 @@ It's partially inspired by the XSLT and built on top of the [ometajs][2].
 
 ## Data Matcher?
 
-Yes, XJST should be used to transform one data into another.
+Yes, match data recursively over a conditions' set to generate any output.
 
-It can be used as url router or as a template engine, more info below.
+XJST can be used as url router or as a template engine, more info below.
 
 ## Installation
 
