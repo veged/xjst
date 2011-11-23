@@ -6,7 +6,7 @@
 ## What is XJST?
 
 XJST is a performance oriented template engine implemented for [node.js][1].
-It's partially inspired by XSLT and built on [ometajs][2].
+It's partially inspired by the XSLT and built on top of the [ometajs][2].
 
 ## Installation
 
@@ -26,7 +26,7 @@ fn({ your: 'data' });
 
 ## Syntax
 
-XJST extends javascript syntax with following keywords: `template`, `local`,
+XJST extends javascript syntax with a following keywords: `template`, `local`,
 `apply`.
 
 ### Template
@@ -38,8 +38,8 @@ template(expression1 === value1 && ... && expressionN === valueN) {
 ```
 
 Multiple `template` statements will be grouped to construct optimal conditions
-graph. Order of `template` statements matters, priority decreases from bottom to
-top.
+graph. Order of the `template` statements matters, the priority decreases from
+the bottom to the top.
 
 ### Local
 
@@ -50,23 +50,23 @@ console.log(local(x = 2) x); // 2
 console.log(x); // 1
 ```
 
-`local` allow you to make temporary changes to visible variable scope. Every
-assignment put inside parens will be reverted immediately after expression
+`local` allows you to make temporary changes to a visible variables scope. Every
+assignment put inside parens will be reverted immediately after the expression
 execution.
 
-You can make multiple assignments:
+You can make multiple assignments in the one statement:
 
 ```javascript
 local(this.x = 2, this.y = 3) ...
 ```
 
-Use `local` with block:
+Or use `local` with a block:
 
 ```javascript
 local(...) { var a = 1; return a * 2; }
 ```
 
-Or as expression:
+Or as an expression:
 
 ```javascript
 var newX = local(x = 2) x;
@@ -89,11 +89,11 @@ template(this.type === 'second') {
 ```
 
 XJST is intended to be applied recursively to the same data, while making small
-reversible changes to it. `apply` keyword works exactly like local (applying
-changes in parens and reverting them after execution), but with small
-distinction - `apply` statement doesn't have a body, so it's just doing some
-changes to date and applying template to changed data (context will be
-preserved).
+reversible changes to it. `apply` keyword works exactly like a `local` (applying
+changes in the parens and reverting them after the execution), but with small
+distinction - `apply` doesn't have a body, so it's just doing some
+changes to the data and applying template recursively
+(the context will be preserved).
 
 ## CLI interface
 
@@ -116,10 +116,10 @@ $ bin/xjst -i template.xjst
 
 ## Optimizations
 
-XJST takes all `template` statements and produces a tree with comparisons in
+XJST takes all the `template` statements and produces a tree with comparisons in
 nodes and `template`'s bodies in leafs. `apply` are handled and replaced by
-direct calls to tree's nodes (some of comparisons can be skipped, using
-context's state).
+direct calls to the tree's nodes (some of comparisons can be skipped, using
+known context's state).
 
 Input:
 
@@ -147,7 +147,7 @@ switch (this.type) {
 
 ## Documentation
 
-Here is [documented source][3].
+Here is the [documented source][3].
 
 Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 
