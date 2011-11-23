@@ -5,8 +5,14 @@
 
 ## What is XJST?
 
-XJST is a performance oriented template engine implemented for [node.js][1].
+XJST is a performance oriented data matcher implemented for [node.js][1].
 It's partially inspired by the XSLT and built on top of the [ometajs][2].
+
+## Data Matcher?
+
+Yes, XJST should be used to transform one data into another.
+
+It can be used as url router or as a template engine, more info below.
 
 ## Installation
 
