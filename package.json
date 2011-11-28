@@ -19,8 +19,9 @@
     "xjst": "./bin/xjst"
   },
   "dependencies": {
-    "coa": "0.2.x",
-    "ometajs": "~ 2.1.8",
+    "coa": "0.3.x",
+    "ometajs": "~ 2.1.9",
+    "q": "0.7.x",
     "uglify-js": "1.1.x"
   },
   "devDependencies": {

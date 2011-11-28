@@ -53,6 +53,6 @@ require('coa').Cmd()
         .output()
         .end()
     .act(function(options) {
-      require('../lib/xjst').run(options);
+      return require('../lib/xjst').run(options);
     })
     .run();
