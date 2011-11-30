@@ -10,7 +10,8 @@ It's partially inspired by the XSLT and built on top of the [ometajs][2].
 
 ## Data Matcher?
 
-Yes, match data recursively over a conditions' set to generate any output.
+Yes, match data recursively over a conditions' set to generate any output (see
+[prefixer][6] for example).
 
 XJST can be used as url router or as a template engine, more info below.
 
@@ -204,3 +205,4 @@ Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 [3]: http://veged.github.com/xjst/
 [4]: https://github.com/veged/xjst/blob/master/doc/tech.ru.md
 [5]: https://github.com/veged/xjst/tree/master/examples
+[6]: https://github.com/veged/xjst/blob/master/examples/prefixer/source.xjst
