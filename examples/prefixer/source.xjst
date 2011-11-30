@@ -1,0 +1,47 @@
+// Input:
+// {
+//   "tree": [
+//     [1, 2],
+//     [3, 4]
+//   ]
+// }
+//
+// Output:
+// [
+//   [
+//     'left',
+//     [
+//       ['left', 1],
+//       ['right', 2]
+//     ]
+//   ],
+//   [
+//     'right',
+//     [
+//       ['left', 3],
+//       ['right', 4]
+//     ]
+//   ]
+// ]
+//
+
+// Default template has lowest priority and will be called only
+// if all other hasn't matched against incoming data
+template(true) {
+  return this.tree;
+}
+
+template(Array.isArray(this.tree)) {
+  return [
+    apply({ node: 'left', tree: this.tree[0] }),
+    apply({ node: 'right', tree: this.tree[1] })
+  ];
+}
+
+template(this.node === 'left') {
+  return ['left', apply({ node: null, tree: this.tree })];
+}
+
+template(this.node === 'right') {
+  return ['right', apply({ node: null, tree: this.tree })];
+}
