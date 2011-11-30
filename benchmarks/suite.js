@@ -15,18 +15,20 @@ exports.run = function(options) {
         xjst.compile(input, file, options).apply;
   };
 
-  console.log([
-    '',
-    '  XX      XX       JJ     SSSSSSS   TTTTTTTTTT',
-    '   XX    XX        JJ     SS            TT    ',
-    '    XX  XX         JJ     SS            TT    ',
-    '     XXXX          JJ     SSSSSSS       TT    ',
-    '    XX XX          JJ          SS       TT    ',
-    '   XX   XX     JJ  JJ          SS       TT    ',
-    '  XX     XX    JJJJJJ     SSSSSSS       TT    ',
-    '',
-  ].join('\n').rainbow);
-  console.log('              // benchmarks //');
+  if (!options['hide-logo']) {
+    console.log([
+      '',
+      '  XX      XX       JJ     SSSSSSS   TTTTTTTTTT',
+      '   XX    XX        JJ     SS            TT    ',
+      '    XX  XX         JJ     SS            TT    ',
+      '     XXXX          JJ     SSSSSSS       TT    ',
+      '    XX XX          JJ          SS       TT    ',
+      '   XX   XX     JJ  JJ          SS       TT    ',
+      '  XX     XX    JJJJJJ     SSSSSSS       TT    ',
+      '',
+    ].join('\n').rainbow);
+    console.log('              // benchmarks //');
+  }
 
   function progress() {
     process.stdout.clearLine(0);
