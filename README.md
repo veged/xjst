@@ -14,6 +14,40 @@ Yes, match data recursively over a conditions' set to generate any output.
 
 XJST can be used as url router or as a template engine, more info below.
 
+## Example
+
+Input:
+
+```javascript
+template(this.elem === 'a') {
+  return '<a href="' + this.href + '">' + this.text + '</a>';
+}
+
+template(this.elem === 'div') {
+  return '<div>' + this.body + '</div>';
+}
+
+template(this.elem === 'div' && this.colour === 'blue') {
+  return '<div class="blue">' + this.body + '</div>';
+}
+```
+
+Output (simplified):
+
+```javascript
+switch (this.elem) {
+  case 'div':
+    switch (this.colour) {
+      case 'blue':
+        return '<div class="blue">' + this.body + '</div>';
+      default:
+        return '<div>' + this.body + '</div>';
+    }
+  case 'a':
+    return '<a href="' + this.href + '">' + this.text + '</a>';
+}
+```
+
 ## Installation
 
 ```bash
