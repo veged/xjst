@@ -24,6 +24,7 @@ require('coa').Cmd()
         .def(false)
         .end()
     .act(function(options) {
-      return require('../benchmarks/suite').run(options)
+      require('../benchmarks/suite').run(options)
+      return require('q').defer().promise;
     })
     .run();
