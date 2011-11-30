@@ -3,3 +3,5 @@ node_modules/
 /docs/
 /lib/xjst/ometa/xjst.js
 v8.log
+*-private.*
+TODO
