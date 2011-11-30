@@ -194,11 +194,11 @@ Here is the [documented source][3].
 
 Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 
-#### Authors
+#### Contributors
 
-* [Sergey Berezhnoy](https://github.com/veged),
-* [Andrey Mischenko](https://github.com/druxa),
-* [Fedor Indutny](https://github.com/indutny).
+* [Sergey Berezhnoy](https://github.com/veged)
+* [Andrey Mischenko](https://github.com/druxa)
+* [Fedor Indutny](https://github.com/indutny)
 
 [1]: http://nodejs.org/
 [2]: https://github.com/veged/ometa-js
