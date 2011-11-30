@@ -1,7 +1,6 @@
 npm-debug.log
 node_modules/
-/docs/
-/lib/xjst/ometa/xjst.js
+docs/
 v8.log
 *-private.*
 TODO

@@ -1,8 +1,5 @@
 graph.jpg
-/examples/
-/benchmarks/
+examples/
+benchmarks/
 v8.log
-/test/
-/benchmarks/templates/*-private.xjst
-/benchmarks/templates/*-private.js
-/benchmarks/templates/*-private.json
+test/
