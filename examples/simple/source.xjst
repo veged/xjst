@@ -1,0 +1,11 @@
+template(this.elem === 'a') {
+  return '<a href="' + this.href + '">' + this.text + '</a>';
+}
+
+template(this.elem === 'div') {
+  return '<div>' + this.body + '</div>';
+}
+
+template(this.elem === 'div' && this.colour === 'blue') {
+  return '<div class="blue">' + this.body + '</div>';
+}

@@ -48,6 +48,8 @@ switch (this.elem) {
 }
 ```
 
+[More examples][5]
+
 ## Installation
 
 ```bash
@@ -129,11 +131,11 @@ template(this.type === 'second') {
 ```
 
 XJST is intended to be applied recursively to the same data, while making small
-reversible changes to it. `apply` keyword works exactly like a `local` (applying
-changes in the parens and reverting them after the execution), but with small
-distinction - `apply` doesn't have a body, so it's just doing some
-changes to the data and applying template recursively
-(the context will be preserved).
+temporary changes to it (all changes will be reverted back after operation).
+`apply` keyword works exactly like a `local` (applying changes in the parens and
+reverting them after the execution), but with small distinction - `apply`
+doesn't have a body, so it's just doing some changes to the data and applying
+template recursively (the context will be preserved).
 
 ## CLI interface
 
@@ -201,3 +203,4 @@ Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 [2]: https://github.com/veged/ometa-js
 [3]: http://veged.github.com/xjst/
 [4]: https://github.com/veged/xjst/blob/master/doc/tech.ru.md
+[5]: https://github.com/veged/xjst/tree/master/examples

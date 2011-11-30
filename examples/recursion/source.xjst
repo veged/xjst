@@ -1,0 +1,26 @@
+// Pass
+// {
+//   "type": "list",
+//   "items": [
+//     { "value": "test" }
+//   ]
+// }
+// as context
+
+template(this.type === 'list') {
+  var res = ['<ul>'];
+
+  this.items.forEach(function(item) {
+    // This will temporarily change context's properties (type and ctx)
+    res.push(apply({ type: 'item', ctx: item }));
+    // And  revert them here
+  });
+
+  res.push('</ul>');
+
+  return res.join('');
+}
+
+template(this.type === 'item') {
+  return '<li>' + this.ctx.value + '</li>';
+}
