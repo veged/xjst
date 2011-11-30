@@ -159,7 +159,7 @@ $ bin/xjst -i template.xjst
 
 ## Optimizations
 
-!(Optimized graph)[https://github.com/veged/xjst/raw/master/graph.jpg]
+![Optimized graph](https://github.com/veged/xjst/raw/master/graph.jpg)
 
 XJST takes all the `template` statements and produces a tree with comparisons in
 nodes and `template`'s bodies in leafs. `apply` are handled and replaced by
