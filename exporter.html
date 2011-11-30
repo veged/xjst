@@ -1,0 +1,73 @@
+<!DOCTYPE html>  <html> <head>   <title>exporter.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="cli.html">                 cli.js               </a>                                           <a class="source" href="compiler.html">                 compiler.js               </a>                                           <a class="source" href="fullgen.html">                 fullgen.js               </a>                                           <a class="source" href="sort-group.html">                 sort-group.js               </a>                                           <a class="source" href="exporter.html">                 exporter.js               </a>                                           <a class="source" href="state.html">                 state.js               </a>                                           <a class="source" href="utils.html">                 utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               exporter.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">exporter</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">xjst</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../xjst&#39;</span><span class="p">),</span>
+    <span class="nx">utils</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">utils</span><span class="p">,</span>
+    <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">stringify</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">ometa</span><span class="p">.</span><span class="nx">XJSTCompiler</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="s1">&#39;trans&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">traverse</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="nx">def</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="nx">tree</span><span class="p">.</span><span class="nx">id</span><span class="p">];</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">tree</span><span class="p">.</span><span class="nx">graph_seen</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+  <span class="nx">tree</span><span class="p">.</span><span class="nx">graph_seen</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">])</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">labels</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="nx">tree</span><span class="p">.</span><span class="nx">cases</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">branch</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">branch</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">tag</span> <span class="o">===</span> <span class="s1">&#39;unexpected&#39;</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+      <span class="nx">labels</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;&lt;f&#39;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span> <span class="s1">&#39;&gt; &#39;</span> <span class="o">+</span> <span class="nx">stringify</span><span class="p">(</span><span class="nx">branch</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+
+      <span class="nx">result</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">traverse</span><span class="p">(</span><span class="nx">branch</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+        <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="nx">tree</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;&quot;:f&#39;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span> <span class="s1">&#39; -&gt; &#39;</span> <span class="o">+</span> <span class="nx">branch</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">id</span>
+      <span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">].</span><span class="nx">tag</span> <span class="o">!==</span> <span class="s1">&#39;unexpected&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">traverse</span><span class="p">(</span><span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="kc">true</span><span class="p">));</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+        <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="nx">tree</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;&quot;:fd -&gt; &#39;</span> <span class="o">+</span> <span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">].</span><span class="nx">id</span> <span class="o">+</span>
+        <span class="s1">&#39; [color=red]&#39;</span>
+      <span class="p">);</span>
+
+      <span class="nx">labels</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;&lt;fd&gt;&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span>
+                  <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="nx">tree</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39; | &#39;</span> <span class="o">+</span> <span class="nx">stringify</span><span class="p">(</span><span class="nx">tree</span><span class="p">[</span><span class="s1">&#39;switch&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;} | &#39;</span> <span class="o">+</span>
+                  <span class="s1">&#39;{&#39;</span> <span class="o">+</span>
+                  <span class="nx">labels</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; | &#39;</span><span class="p">)</span> <span class="o">+</span>
+                  <span class="s1">&#39;}&#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;}&#39;</span><span class="p">;</span>
+    <span class="nx">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; [label=&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">label</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">def</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; [shape=circle, color=red]&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">tree</span><span class="p">.</span><span class="nx">routes</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">tree</span><span class="p">.</span><span class="nx">routes</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">tree</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39; -&gt; &#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39; [color=blue]&#39;</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">exporter</span><span class="p">.</span><span class="nx">write</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">write</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="nx">filename</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;digraph {&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;concentrate=yes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;node [shape=record]&#39;</span>
+  <span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">traverse</span><span class="p">(</span><span class="nx">tree</span><span class="p">),</span> <span class="s1">&#39;}&#39;</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+
+  <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span> <span class="nx">content</span><span class="p">);</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
