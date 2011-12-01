@@ -1,5 +1,5 @@
 ![Logo][0]
-## High-voltage data transformations
+## High voltage data transformator
 
 XJST (*Extensible JavaScript transformations*) is a DSL for universal data
 transformations with compiler written on top of the [node.js][1] and
