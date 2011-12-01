@@ -19,7 +19,7 @@ For example, XJST can be used as:
 
 ## Extensible
 
-XJST makes possible to extend your previous transformation by overwriting or
+XJST makes possible to extend your previous transformation by overriding or
 specializing some of it's parts (example below is extending
 `this.url === '/login'` condition with redirection for logged in users).
 
