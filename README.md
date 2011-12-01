@@ -1,5 +1,4 @@
 ![Logo][0]
-
 ## High-voltage data transformations
 
 XJST (*Extensible JavaScript transformations*) is a DSL for universal data
