@@ -1,13 +1,10 @@
-     ___ ___    _____  _______  _______
-    |   |   | _|     ||     __||_     _|
-    |-     -||       ||__     |  |   |
-    |___|___||_______||_______|  |___|
+![Logo][0]
 
-## Extensible JavaScript Transformations
+## High-voltage data transformations
 
-XJST is a DSL for universal data transformations with compiler written on top of
-the [node.js][1] and [ometajs][2] and output code working in any browser or on
-server-side.
+XJST (*Extensible JavaScript transformations*) is a DSL for universal data
+transformations with compiler written on top of the [node.js][1] and
+[ometajs][2] and output code working in any browser or on server-side.
 
 ## Data Transformations?
 
@@ -230,6 +227,7 @@ Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 * [Andrey Mischenko](https://github.com/druxa)
 * [Fedor Indutny](https://github.com/indutny)
 
+[0]: https://github.com/veged/xjst/raw/master/logo.png "XJST - High-voltage data transformer"
 [1]: http://nodejs.org/
 [2]: https://github.com/veged/ometa-js
 [3]: http://veged.github.com/xjst/
