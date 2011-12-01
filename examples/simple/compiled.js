@@ -1,7 +1,6 @@
 (function(exports) {
     exports.apply = apply;
     function apply() {
-        var __this = this;
         var __t = this["elem"];
         if (__t === "div") {
             if (this["colour"] === "blue") {
