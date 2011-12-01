@@ -3,49 +3,68 @@
     |-     -||       ||__     |  |   |
     |___|___||_______||_______|  |___|
 
-## What is XJST?
+## Extensible JavaScript Transformations
 
-XJST is a performance oriented data matcher implemented for [node.js][1].
-It's partially inspired by the XSLT and built on top of the [ometajs][2].
+XJST is a DSL for universal data transformations with compiler written on top of
+the [node.js][1] and [ometajs][2] and output code working in any browser or on
+server-side.
 
-## Data Matcher?
+## Data Transformations?
 
-Yes, match data recursively over a conditions' set to generate any output (see
-[prefixer][6] for example).
+Yes, traverse any data in specific flow using matching against conditions' set
+to generate any output (see [binary tree prefixer][6] for example).
 
-XJST can be used as url router or as a template engine, more info below.
+For example, XJST can be used as:
 
-## Example
+* HTTP request router
+* template engine
+* AST transformator
+* parser
+
+## Extensible
+
+XJST makes possible to extend your previous transformation by overwriting or
+specializing some of it's parts (example below is extending
+`this.url === '/login'` condition with redirection for logged in users).
+
+XJST is a superset of JavaScript so you can use any popular libraries (i.e.
+jquery or underscore) within your transformation and write condition's bodies in
+JavaScript.
+
+Creating your own DSL based on XJST is also possible, because it's syntax parser
+is powered by [ometajs][2].
+
+## Basic example
 
 Input:
 
 ```javascript
-template(this.elem === 'a') {
-  return '<a href="' + this.href + '">' + this.text + '</a>';
+template(this.url === '/') {
+  return render('home page')
 }
 
-template(this.elem === 'div') {
-  return '<div>' + this.body + '</div>';
+template(this.url === '/login') {
+  return render('login form')
 }
 
-template(this.elem === 'div' && this.colour === 'blue') {
-  return '<div class="blue">' + this.body + '</div>';
+template(this.url === '/login' && this.cookie.is_logined) {
+  return redirect('user page')
 }
 ```
 
 Output (simplified):
 
 ```javascript
-switch (this.elem) {
-  case 'div':
-    switch (this.colour) {
-      case 'blue':
-        return '<div class="blue">' + this.body + '</div>';
+switch (this.url) {
+  case '/login':
+    switch (this.cookie.is_logined) {
+      case true:
+        return redirect('user page')
       default:
-        return '<div>' + this.body + '</div>';
+        return render('login form')
     }
-  case 'a':
-    return '<a href="' + this.href + '">' + this.text + '</a>';
+  case '/':
+    return render('home page')
 }
 ```
 
@@ -60,16 +79,16 @@ npm install xjst
 ## Public API
 
 ```javascript
-var xjst = require('xjst');
+var xjst = require('xjst'),
 
-var fn = xjst.compile('template string', 'filename.xjst', options);
+    fn = xjst.compile('template string', 'filename.xjst', options);
 
 fn({ your: 'data' });
 ```
 
 ## Syntax
 
-XJST extends javascript syntax with a following keywords: `template`, `local`,
+XJST extends JavaScript syntax with a following keywords: `template`, `local`,
 `apply`.
 
 ### Template
@@ -83,6 +102,15 @@ template(expression1 === value1 && ... && expressionN === valueN) {
 Multiple `template` statements will be grouped to construct optimal conditions
 graph. Order of the `template` statements matters, the priority decreases from
 the bottom to the top.
+
+There're few restrictions for templates:
+
+*   Expressions in template's predicate should have no side-effects
+    (i.e. should not change transformation context).
+
+*   It's preferred to use function calls or equality comparisons joined by
+    logical `&&` operator for expressions, as it can be better optimized at
+    compilation time.
 
 ### Local
 
