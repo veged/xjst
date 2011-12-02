@@ -143,6 +143,17 @@ Or as an expression:
 var newX = local(x = 2) x;
 ```
 
+### Extends
+
+```javascript
+extends 'relative/or/absolute/path/to/xjst/file'
+
+// ... your template statements ..
+```
+
+Extend current transformation with one passed into `extends`, not that
+comparisons in current file will have a higher priority.
+
 ### Apply
 
 ```javascript
@@ -165,6 +176,26 @@ temporary changes to it (all changes will be reverted back after operation).
 reverting them after the execution), but with small distinction - `apply`
 doesn't have a body, so it's just doing some changes to the data and applying
 template recursively (the context will be preserved).
+
+### Super apply
+
+```javascript
+template(this.page === 'home') {
+  // do something
+}
+```
+
+```javascript
+// second.xjst
+extends 'first'
+
+template(this.page === 'home') {
+  super apply(); // Will call "do something" in upper template
+}
+```
+
+Super call gives you an ability to pass execution into transformations that
+you're extending.
 
 ## CLI interface
 
