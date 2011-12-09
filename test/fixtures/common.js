@@ -10,7 +10,11 @@ common.render = function(name, options) {
   var filename = path.resolve(__dirname + '/../templates/' + name),
       template = fs.readFileSync(filename + '.xjst').toString();
 
-  var sg = xjst.compile(template, name, {
+  var ng = xjst.compile(template, name, {
+        'no-opt': true,
+        merge: options.merge
+      }),
+      sg = xjst.compile(template, name, {
         engine: 'sort-group',
         merge: options.merge
       }),
@@ -26,11 +30,13 @@ common.render = function(name, options) {
       fg.apply = apply;
 
       var results = [
+        ng.apply.call(context),
         sg.apply.call(context),
         fg.apply.call(context)
       ];
 
       assert.deepEqual(results[0], results[1]);
+      assert.deepEqual(results[1], results[2]);
 
       return results[0];
     }
