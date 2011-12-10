@@ -3,6 +3,8 @@
     |-     -||       ||__     |  |   |
     |___|___||_______||_______|  |___|
 
+[![Build Status](https://secure.travis-ci.org/veged/xjst.png)](http://travis-ci.org/veged/xjst)
+
 ## Extensible JavaScript Transformations
 
 XJST is a DSL for universal data transformations with compiler written on top of
