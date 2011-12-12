@@ -29,7 +29,7 @@
     "cliff": "0.1.x",
     "docco": "0.3.x",
     "microtime": "0.1.x",
-    "nodeunit": "0.5.x",
+    "nodeunit": "0.6.x",
     "q": "0.7.x",
     "watch": "0.3.x",
     "winston": "0.5.x"
