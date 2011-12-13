@@ -1,0 +1,96 @@
+<!DOCTYPE html>  <html> <head>   <title>hlist.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="cli.html">                 cli.js               </a>                                           <a class="source" href="compiler.html">                 compiler.js               </a>                                           <a class="source" href="fullgen.html">                 fullgen.js               </a>                                           <a class="source" href="sort-group.html">                 sort-group.js               </a>                                           <a class="source" href="exporter.html">                 exporter.js               </a>                                           <a class="source" href="flist.html">                 flist.js               </a>                                           <a class="source" href="hlist.html">                 hlist.js               </a>                                           <a class="source" href="serializer.html">                 serializer.js               </a>                                           <a class="source" href="state.html">                 state.js               </a>                                           <a class="source" href="apply.html">                 apply.js               </a>                                           <a class="source" href="vars.html">                 vars.js               </a>                                           <a class="source" href="utils.html">                 utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               hlist.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">xjst</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../../xjst&#39;</span><span class="p">),</span>
+    <span class="nx">utils</span> <span class="o">=</span> <span class="nx">xjst</span><span class="p">.</span><span class="nx">utils</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>function HashList (serialize, options)</h3>
+
+<h4>@serializer {Serializer} renderer object</h4>
+
+<h4>@options {Object} compiler options</h4>
+
+<p>Creates hashs list</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">function</span> <span class="nx">HashList</span><span class="p">(</span><span class="nx">serializer</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">hashs</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">serializer</span> <span class="o">=</span> <span class="nx">serializer</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>function create (serialize, options)</h3>
+
+<h4>@serializer {Serializer} renderer object</h4>
+
+<h4>@options {Object} compiler options</h4>
+
+<p>HashList constructor wrapper</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">create</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">serializer</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">HashList</span><span class="p">(</span><span class="nx">serializer</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>function add (id, tag, cases, def)</h3>
+
+<h4>@id {String|Number} switch's name identificator</h4>
+
+<h4>@tag {String} compiled tag</h4>
+
+<h4>@cases {Array} compiled switch's cases</h4>
+
+<h4>@def {String} compiled default's body</h4>
+
+<p>Adds switch to hash</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">HashList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">tag</span><span class="p">,</span> <span class="nx">cases</span><span class="p">,</span> <span class="nx">def</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">hash</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">map</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="nx">numericMap</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="s1">&#39;default&#39;</span><span class="o">:</span> <span class="nx">def</span>
+  <span class="p">};</span>
+
+  <span class="nx">cases</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">branch</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">branch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="nx">body</span> <span class="o">=</span> <span class="nx">branch</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+    <span class="nx">index</span> <span class="o">=</span> <span class="nx">index</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^\((.*)\)$/</span><span class="p">,</span> <span class="s1">&#39;$1&#39;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="nx">index</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">hash</span><span class="p">.</span><span class="nx">numericMap</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">body</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">hash</span><span class="p">.</span><span class="nx">map</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">body</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="p">[</span>
+    <span class="s1">&#39;var __i = &#39;</span><span class="p">,</span> <span class="nx">tag</span><span class="p">,</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;return ((typeof __i === &quot;number&quot; ? &#39;</span><span class="p">,</span>
+    <span class="s1">&#39;__h&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;.n[__i] : __h&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;.m[__i]) ||&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;__h&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;.d).call(this)&#39;</span>
+  <span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>function render ()</h3>
+
+<p>Renders function list into js code</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">HashList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">hashs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">hashs</span><span class="p">,</span>
+      <span class="nx">serializer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">serializer</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">hashs</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;var __h&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39; = {\n&#39;</span><span class="p">],</span>
+        <span class="nx">symbolic</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">map</span><span class="p">),</span>
+        <span class="nx">numeric</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">numericMap</span><span class="p">);</span>
+
+    <span class="kd">function</span> <span class="nx">insertKeys</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;    &#39;</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="s1">&#39;: function() {&#39;</span><span class="p">);</span>
+
+      <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+        <span class="nx">serializer</span><span class="p">.</span><span class="nx">addContext</span><span class="p">(</span><span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">numericMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">||</span> <span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">map</span><span class="p">[</span><span class="nx">key</span><span class="p">]),</span>
+        <span class="s1">&#39;}&#39;</span>
+      <span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">!==</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  &quot;n&quot;: {\n&#39;</span><span class="p">);</span>
+    <span class="nx">numeric</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">insertKeys</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  },\n&#39;</span><span class="p">);</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  &quot;m&quot;: {\n&#39;</span><span class="p">);</span>
+    <span class="nx">symbolic</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">insertKeys</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  },\n&#39;</span><span class="p">);</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;  &quot;d&quot;: function() {&#39;</span><span class="p">)</span> <span class="p">;</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">serializer</span><span class="p">.</span><span class="nx">addContext</span><span class="p">(</span><span class="nx">hashs</span><span class="p">[</span><span class="nx">id</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">]));</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;};\n&#39;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+  <span class="p">})</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
