@@ -22,7 +22,7 @@
     "coa": "0.3.x",
     "ometajs": "~ 2.1.9",
     "q": "0.7.x",
-    "uglify-js": "1.1.x"
+    "uglify-js": "1.2.x"
   },
   "devDependencies": {
     "benchmark": "0.3.x",
