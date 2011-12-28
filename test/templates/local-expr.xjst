@@ -30,3 +30,13 @@ template(this.type === 'complex') {
     a: v
   };
 }
+
+template(this.type === 'regr-1') {
+  var x = 1/2, y;
+  var a = local (x = x + 2) x, y = x;
+
+  return {
+    x: x + y,
+    a: a + 1/2
+  };
+}
