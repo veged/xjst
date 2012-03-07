@@ -268,3 +268,8 @@ Some technical details (in Russian) can be found in [doc/tech.ru.md][4].
 [5]: https://github.com/veged/xjst/tree/master/examples
 [6]: https://github.com/veged/xjst/blob/master/examples/prefixer/source.xjst
 [7]: https://github.com/veged/xjst/raw/master/graph.jpg "Optimized graph"
+
+
+<!-- Yandex.Metrika counter -->
+<img src="//mc.yandex.ru/watch/12831025" style="position:absolute; left:-9999px;" alt="" />
+<!-- /Yandex.Metrika counter -->
