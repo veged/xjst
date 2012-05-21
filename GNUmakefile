@@ -7,7 +7,8 @@ clean:
 	@-[ -f lib/xjst/ometa/xjst.js ] && rm lib/xjst/ometa/xjst.js
 
 test:
-	nodeunit test/unit/*-test.js
+	# Note that --ignore-leaks is a temporary flag and should be removed in future
+	mocha --ignore-leaks --ui tdd --growl --reporter spec test/unit/*-test.js
 
 benchmark: *
 	bin/benchmark --details

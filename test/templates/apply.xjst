@@ -13,7 +13,6 @@ template(this.type === 'simple' && this.mod === 'y') {
 }
 
 template(this.type === 'complex') {
-  var fn = apply;
   this.color = 'red';
   local (this.mod = 'bem') {
     return apply(this.type = 'complex');
