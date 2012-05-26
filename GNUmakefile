@@ -1,10 +1,8 @@
-all: lib
-
-lib: lib/xjst/ometa/xjst.ometajs
-	ometajs2js -i lib/xjst/ometa/xjst.ometajs -o lib/xjst/ometa/xjst.js
+all:
+	# nothing to do
 
 clean:
-	@-[ -f lib/xjst/ometa/xjst.js ] && rm lib/xjst/ometa/xjst.js
+	# nothing to do
 
 test:
 	# Note that --ignore-leaks is a temporary flag and should be removed in future
