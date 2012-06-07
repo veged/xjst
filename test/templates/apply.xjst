@@ -71,3 +71,11 @@ template(this.type === 'invalidating' && this.sub === 'end') {
 template(this.type === 'invalidating' && !this.sub) {
   return apply(this.sub = { s: 'x' });
 }
+
+template(this.type === 'apply-next') {
+  return 'ok';
+}
+
+template(this.type === 'apply-next') {
+  return applyNext();
+}

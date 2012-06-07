@@ -24,4 +24,8 @@ suite('XJST', function() {
       'apply keyword - invalidating nested',
        applyTest('apply', 'invalidating')
   );
+  test(
+      'applyNext keyword',
+       applyTest('apply', 'apply-next')
+  );
 });
