@@ -1,0 +1,3 @@
+template (this.name === 'main') {
+  return 'ok';
+}
