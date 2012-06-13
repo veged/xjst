@@ -7,18 +7,18 @@ var common = exports,
 common.render = function(name, options) {
   options || (options = {});
 
-  var filename = path.resolve(__dirname + '/../templates/' + name),
-      template = fs.readFileSync(filename + '.xjst').toString();
+  var filename = path.resolve(__dirname + '/../templates/' + name) + '.xjst',
+      template = fs.readFileSync(filename).toString();
 
-  var ng = xjst.compile(template, name, {
+  var ng = xjst.compile(template, filename, {
         'no-opt': true,
         merge: options.merge
       }),
-      sg = xjst.compile(template, name, {
+      sg = xjst.compile(template, filename, {
         engine: 'sort-group',
         merge: options.merge
       }),
-      fg = xjst.compile(template, name, {
+      fg = xjst.compile(template, filename, {
         engine: 'fullgen',
         merge: options.merge
       });
