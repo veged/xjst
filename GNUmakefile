@@ -5,9 +5,7 @@ clean:
 	# nothing to do
 
 test:
-	# Note that --ignore-leaks is a temporary flag and should be removed in future
-	mocha --ignore-leaks --slow 600 --ui tdd --growl \
-		--reporter spec test/unit/*-test.js
+	npm test
 
 benchmark: *
 	bin/benchmark --details

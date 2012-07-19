@@ -21,8 +21,8 @@
   "dependencies": {
     "coa": "0.3.1",
     "ometajs": "~ 3.1.4",
-    "q": "0.7.x",
-    "uglify-js": "1.2.x"
+    "q": "0.8.x",
+    "uglify-js": "1.3.x"
   },
   "devDependencies": {
     "benchmark": "0.3.x",
@@ -45,6 +45,6 @@
   "scripts": {
     "prepublish": "make -B",
     "publish": "make clean",
-    "test": "make test"
+    "test": "mocha --ignore-leaks --slow 600 --ui tdd --growl --reporter spec test/unit/*-test.js"
   }
 }
