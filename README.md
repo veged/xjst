@@ -6,7 +6,7 @@
 ## Extensible JavaScript Transformations [![Build Status](https://secure.travis-ci.org/veged/xjst.png)](http://travis-ci.org/veged/xjst)
 
 XJST is a DSL for universal data transformations with compiler written on top of
-the [node.js][1] and [ometajs][2] and output code working in any browser or on
+the [Node.js][1] and [Ometa/JS][2] and output code working in any browser or on
 server-side.
 
 ## Data Transformations?
