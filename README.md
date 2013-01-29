@@ -197,6 +197,21 @@ template(this.page === 'home') {
 Super call gives you an ability to pass execution into transformations that
 you're extending.
 
+### Apply next
+
+```javascript
+template(this.page === 'home' && this.action === 'login') {
+  // match here
+}
+
+template(this.page === 'home') {
+  applyNext();
+}
+```
+
+`applyNext()` call will reapply all templates, except one where it was called,
+to the inputs data.
+
 ## CLI interface
 
 ```bash
