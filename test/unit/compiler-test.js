@@ -21,14 +21,12 @@ suite('XJST Compiler', function () {
       });
 
       template(this.x === 1)(function() {
-        return local(this)({ y: 2, a: {}, 'a.b': 3 })(function() {
+        return local(this)({ y: 2 }, { a: {}, 'a.b': 3 })(function() {
           return applyNext(this)();
         });
       });
 
-      template(this.y === 2, this.x === 1)(function() {
-        return 'yay';
-      });
+      template(this.y === 2, this.x === 1)('yay');
 
       template(this.y === 3, this.x === 1)(function() {
         return 'ouch';
