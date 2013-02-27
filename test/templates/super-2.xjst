@@ -1,6 +1,0 @@
-extends 'super-1.xjst'
-
-template (this.name === 'main') {
-  super apply(); // stmt
-  return super apply(); // expr
-}

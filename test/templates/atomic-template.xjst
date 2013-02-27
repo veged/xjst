@@ -1,3 +1,0 @@
-template(true) {
-  return 'ok';
-}
