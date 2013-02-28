@@ -79,4 +79,14 @@ suite('XJST Compiler', function () {
       });
     }, { x: 1, y: 2 }, 'yay');
   });
+
+  test('local\'s context', function() {
+    run(function() {
+      template()(function() {
+        return local(this)({ prop: this.nop })(function() {
+          return this.prop;
+        });
+      });
+    }, { nop: 'yay' }, 'yay');
+  });
 });
