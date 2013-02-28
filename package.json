@@ -44,8 +44,6 @@
     }
   ],
   "scripts": {
-    "prepublish": "make -B",
-    "publish": "make clean",
-    "test": "mocha --ignore-leaks --slow 600 --ui tdd --growl --reporter spec test/unit/compiler-test.js"
+    "test": "mocha --ignore-leaks --slow 600 --ui tdd --growl --reporter spec test/unit/*-test.js"
   }
 }
