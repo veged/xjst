@@ -1,0 +1,187 @@
+{
+  "name": "xjst",
+  "version": "0.4.5",
+  "dependencies": {
+    "coa": {
+      "version": "0.3.8",
+      "from": "coa@~ 0.3.8",
+      "resolved": "https://registry.npmjs.org/coa/-/coa-0.3.8.tgz"
+    },
+    "ometajs": {
+      "version": "3.2.4",
+      "from": "ometajs@~ 3.2.4"
+    },
+    "q": {
+      "version": "0.8.10",
+      "from": "q@~ 0.8.10",
+      "resolved": "https://registry.npmjs.org/q/-/q-0.8.10.tgz"
+    },
+    "uglify-js": {
+      "version": "1.3.4",
+      "from": "uglify-js@1.3.x"
+    },
+    "spoon": {
+      "version": "0.1.10",
+      "from": "spoon@~0.1.10",
+      "dependencies": {
+        "esprima": {
+          "version": "1.0.2",
+          "from": "esprima@~1.0.2"
+        },
+        "escodegen": {
+          "version": "0.0.17",
+          "from": "escodegen@~0.0.15",
+          "resolved": "https://registry.npmjs.org/escodegen/-/escodegen-0.0.17.tgz",
+          "dependencies": {
+            "source-map": {
+              "version": "0.1.9",
+              "from": "source-map@>= 0.1.2",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.9.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.0.4",
+                  "from": "amdefine@>=0.0.4"
+                }
+              }
+            }
+          }
+        },
+        "estraverse": {
+          "version": "0.0.4",
+          "from": "estraverse@~0.0.4"
+        }
+      }
+    },
+    "benchmark": {
+      "version": "0.3.0",
+      "from": "benchmark@0.3.x",
+      "resolved": "https://registry.npmjs.org/benchmark/-/benchmark-0.3.0.tgz"
+    },
+    "docco": {
+      "version": "0.3.0",
+      "from": "docco@0.3.x",
+      "resolved": "https://registry.npmjs.org/docco/-/docco-0.3.0.tgz"
+    },
+    "watch": {
+      "version": "0.5.1",
+      "from": "watch@0.5.x"
+    },
+    "cliff": {
+      "version": "0.1.8",
+      "from": "cliff@0.1.x",
+      "resolved": "https://registry.npmjs.org/cliff/-/cliff-0.1.8.tgz",
+      "dependencies": {
+        "colors": {
+          "version": "0.6.0-1",
+          "from": "colors@0.x.x"
+        },
+        "eyes": {
+          "version": "0.1.8",
+          "from": "eyes@0.1.x"
+        },
+        "winston": {
+          "version": "0.6.2",
+          "from": "winston@0.6.x",
+          "dependencies": {
+            "async": {
+              "version": "0.1.22",
+              "from": "async@0.1.x"
+            },
+            "cycle": {
+              "version": "1.0.2",
+              "from": "cycle@1.0.x"
+            },
+            "pkginfo": {
+              "version": "0.2.3",
+              "from": "pkginfo@0.2.x"
+            },
+            "request": {
+              "version": "2.9.203",
+              "from": "request@2.9.x"
+            },
+            "stack-trace": {
+              "version": "0.0.6",
+              "from": "stack-trace@0.0.x"
+            }
+          }
+        }
+      }
+    },
+    "mocha": {
+      "version": "1.0.3",
+      "from": "mocha@~1.0.3",
+      "dependencies": {
+        "commander": {
+          "version": "0.5.2",
+          "from": "commander@0.5.x"
+        },
+        "growl": {
+          "version": "1.5.1",
+          "from": "growl@1.5.x"
+        },
+        "jade": {
+          "version": "0.20.3",
+          "from": "jade@0.20.3",
+          "resolved": "https://registry.npmjs.org/jade/-/jade-0.20.3.tgz",
+          "dependencies": {
+            "mkdirp": {
+              "version": "0.3.5",
+              "from": "mkdirp@>= 0.0.7"
+            }
+          }
+        },
+        "diff": {
+          "version": "1.0.2",
+          "from": "diff@1.0.2"
+        },
+        "debug": {
+          "version": "0.7.2",
+          "from": "debug@*"
+        }
+      }
+    },
+    "winston": {
+      "version": "0.5.11",
+      "from": "winston@0.5.x",
+      "resolved": "https://registry.npmjs.org/winston/-/winston-0.5.11.tgz",
+      "dependencies": {
+        "async": {
+          "version": "0.1.22",
+          "from": "async@0.1.x"
+        },
+        "colors": {
+          "version": "0.6.0-1",
+          "from": "colors@0.x.x"
+        },
+        "eyes": {
+          "version": "0.1.8",
+          "from": "eyes@0.1.x"
+        },
+        "loggly": {
+          "version": "0.3.11",
+          "from": "loggly@0.3.x >=0.3.7",
+          "resolved": "https://registry.npmjs.org/loggly/-/loggly-0.3.11.tgz",
+          "dependencies": {
+            "request": {
+              "version": "2.9.203",
+              "from": "request@2.9.x"
+            },
+            "timespan": {
+              "version": "2.2.0",
+              "from": "timespan@2.x.x",
+              "resolved": "https://registry.npmjs.org/timespan/-/timespan-2.2.0.tgz"
+            }
+          }
+        },
+        "pkginfo": {
+          "version": "0.2.3",
+          "from": "pkginfo@0.2.x"
+        },
+        "stack-trace": {
+          "version": "0.0.6",
+          "from": "stack-trace@0.0.x"
+        }
+      }
+    }
+  }
+}
