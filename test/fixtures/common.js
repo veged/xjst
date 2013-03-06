@@ -17,30 +17,24 @@ common.render = function(name, options) {
       sg = xjst.compile(template, filename, {
         engine: 'sort-group',
         merge: options.merge
-      }),
-      fg = xjst.compile(template, filename, {
-        engine: 'fullgen',
-        merge: options.merge
       });
 
-  var apply = fg.apply;
+  var apply = sg.apply;
 
-  fg.apply = {
+  sg.apply = {
     call: function(context) {
-      fg.apply = apply;
+      sg.apply = apply;
 
       var results = [
         ng.apply.call(context),
-        sg.apply.call(context),
-        fg.apply.call(context)
+        sg.apply.call(context)
       ];
 
-      assert.deepEqual(results[0], results[1]);
-      assert.deepEqual(results[1], results[2]);
+      assert.deepEqual(results[1], results[0]);
 
       return results[0];
     }
   };
 
-  return fg;
+  return sg;
 };
