@@ -44,6 +44,6 @@
     }
   ],
   "scripts": {
-    "test": "mocha --ignore-leaks --slow 600 --ui tdd --growl --reporter spec test/unit/*-test.js"
+    "test": "mocha --slow 600 --growl --reporter spec test/unit/*-test.js"
   }
 }

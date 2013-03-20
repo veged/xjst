@@ -1,7 +1,7 @@
 var xjst = require('../..');
 var assert = require('assert');
 
-suite('XJST Compiler', function () {
+describe('XJST Compiler', function () {
   function run(fn, data, expected) {
     var code = fn.toString().replace(/^function[^{]*{|}$/g, '');
     var c = xjst.compiler.create();
@@ -14,7 +14,7 @@ suite('XJST Compiler', function () {
     assert.deepEqual(runtime, optimized);
   }
 
-  test('all syntax works', function() {
+  it('should support all syntax', function() {
     run(function() {
       template()(function() {
         return apply(this)({ x: 1 });
@@ -36,7 +36,7 @@ suite('XJST Compiler', function () {
     }, {}, 'yay');
   });
 
-  test('base template', function() {
+  it('should compile template without predicates', function() {
     run(function() {
       template()(function() {
         return 'yay';
@@ -44,7 +44,7 @@ suite('XJST Compiler', function () {
     }, {}, 'yay');
   });
 
-  test('two templates', function() {
+  it('should compile multiple two templates', function() {
     run(function() {
       template()(function() {
         return 'ouch';
@@ -56,7 +56,7 @@ suite('XJST Compiler', function () {
     }, { x: 1 }, 'yay');
   });
 
-  test('>2 templates', function() {
+  it('should compile multiple (>2) templates', function() {
     run(function() {
       template()(function() {
         return 'ouch';
@@ -80,7 +80,7 @@ suite('XJST Compiler', function () {
     }, { x: 1, y: 2 }, 'yay');
   });
 
-  test('local\'s context', function() {
+  it('should propagate local\'s context', function() {
     run(function() {
       template()(function() {
         return local(this)({ prop: this.nop })(function() {
