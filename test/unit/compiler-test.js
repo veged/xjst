@@ -90,6 +90,22 @@ describe('XJST Compiler', function () {
     }, { nop: 'yay' }, 'yay');
   });
 
+  it('should compile local with dynamic base', function() {
+    run(function() {
+      var once = 0;
+      function base() {
+        return {
+          x: ++once
+        };
+      }
+      template()(function() {
+        return local(base())({ prop: this.nop })(function() {
+          return once;
+        });
+      });
+    }, { nop: 'yay' }, 1);
+  });
+
   it('should apply optimizations correctly', function() {
     run(function() {
       template(this.x === 1)(function() {
