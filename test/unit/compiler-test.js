@@ -89,4 +89,18 @@ describe('XJST Compiler', function () {
       });
     }, { nop: 'yay' }, 'yay');
   });
+
+  it('should apply optimizations correctly', function() {
+    run(function() {
+      template(this.x === 1)(function() {
+        return apply(this)({ y: 2 });
+      });
+      template(this.x === 1, this.y === 3)(function() {
+        return 'bad';
+      });
+      template(this.x === 1, this.y === 2)(function() {
+        return 'ok';
+      });
+    }, { x: 1 }, 'ok')
+  });
 });
