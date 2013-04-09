@@ -23,8 +23,8 @@
     "q": "~ 0.8.10",
     "spoon": "~ 0.1.3",
     "esprima": "~1.0.2",
-    "escodegen": "0.0.19",
-    "estraverse": "0.0.4"
+    "estraverse": "0.0.4",
+    "uglify-js": "~2.2.5"
   },
   "devDependencies": {
     "benchmark": "0.3.x",
