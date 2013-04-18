@@ -98,7 +98,7 @@ describe('XJST Compiler', function () {
           x: ++once
         };
       }
-      template(!this.$override)(function() {
+      template()(function() {
         return local(base())({ prop: this.nop })(function() {
           return once;
         });
