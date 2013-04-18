@@ -98,7 +98,7 @@ describe('XJST Compiler', function () {
           x: ++once
         };
       }
-      template()(function() {
+      template(!this.$override)(function() {
         return local(base())({ prop: this.nop })(function() {
           return once;
         });
@@ -118,5 +118,16 @@ describe('XJST Compiler', function () {
         return 'ok';
       });
     }, { x: 1 }, 'ok')
+  });
+
+  it('should support function predicates', function() {
+    run(function() {
+      template()(function() {
+        return 'ok';
+      });
+      template(function() { return false })(function() {
+        return 'bad';
+      });
+    }, {}, 'ok')
   });
 });
