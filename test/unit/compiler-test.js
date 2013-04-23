@@ -108,8 +108,8 @@ describe('XJST Compiler', function () {
 
   it('should apply optimizations correctly', function() {
     run(function() {
-      template(this.x === 1)(function() {
-        return apply(this)({ y: 2 });
+      template(this.x === 1, this.y === 4)(function() {
+        return apply(this)({ y: 5 });
       });
       template(this.x === 1, this.y === 3)(function() {
         return 'bad';
@@ -117,7 +117,7 @@ describe('XJST Compiler', function () {
       template(this.x === 1, this.y === 2)(function() {
         return 'ok';
       });
-    }, { x: 1 }, 'ok')
+    }, { x: 1, y: 4 }, 'ok')
   });
 
   it('should support function predicates', function() {
