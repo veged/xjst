@@ -109,12 +109,12 @@ describe('XJST Compiler', function () {
   it('should apply optimizations correctly', function() {
     run(function() {
       template(this.x === 1, this.y === 4)(function() {
-        return apply(this)({ y: 5 });
+        return local(this)({ y: 5 })(apply(this)());
       });
       template(this.x === 1, this.y === 3)(function() {
         return 'bad';
       });
-      template(this.x === 1, this.y === 2)(function() {
+      template(this.x === 1, this.y === 5)(function() {
         return 'ok';
       });
     }, { x: 1, y: 4 }, 'ok')
