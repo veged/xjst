@@ -22,7 +22,7 @@
     "coa": "~ 0.3.8",
     "q": "~ 0.8.10",
     "esprima": "~1.0.2",
-    "uglify-js": "~2.2.5",
+    "uglify-js": "~2.3.2",
     "estraverse": "~1.1.1"
   },
   "devDependencies": {
