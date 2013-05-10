@@ -39,17 +39,17 @@ is powered by [ometajs][2].
 Input:
 
 ```javascript
-template(this.url === '/') {
+template(this.url === '/')(function() {
   return render('home page')
-}
+});
 
-template(this.url === '/login') {
+template(this.url === '/login')(function() {
   return render('login form')
-}
+});
 
-template(this.url === '/login' && this.cookie.is_logined) {
+template(this.url === '/login', this.cookie.is_logined)(function() {
   return redirect('user page')
-}
+});
 ```
 
 Output (simplified):
@@ -94,9 +94,9 @@ XJST extends JavaScript syntax with a following keywords: `template`, `local`,
 ### Template
 
 ```javascript
-template(expression1 === value1 && ... && expressionN === valueN) {
+template(expression1 === value1, ... , expressionN === valueN)(function() {
   // will be run if condition above equals to true
-}
+})
 ```
 
 Multiple `template` statements will be grouped to construct optimal conditions
@@ -115,10 +115,10 @@ There're few restrictions for templates:
 ### Local
 
 ```javascript
-var x = 1;
+var obj = { x: 1 };
 
-console.log(local(x = 2) x); // 2
-console.log(x); // 1
+console.log(local(obj)({ x: 2 })(obj.x)); // 2
+console.log(obj.x); // 1
 ```
 
 `local` allows you to make temporary changes to a visible variables scope. Every
@@ -128,46 +128,35 @@ execution.
 You can make multiple assignments in the one statement:
 
 ```javascript
-local(this.x = 2, this.y = 3) ...
+local({ x: 2, y: 3 })(/* your code */)
 ```
 
 Or use `local` with a block:
 
 ```javascript
-local(...) { var a = 1; return a * 2; }
+local({ ... })(function() { var a = 1; return a * 2; });
 ```
 
 Or as an expression:
 
 ```javascript
-var newX = local(x = 2) x;
+var newX = local(this)({ x: 2 })(this.x);
 ```
-
-### Extends
-
-```javascript
-extends 'relative/or/absolute/path/to/xjst/file'
-
-// ... your template statements ..
-```
-
-Extend current transformation with one passed into `extends`, not that
-comparisons in current file will have a higher priority.
 
 ### Apply
 
 ```javascript
-template(true) {
-  return apply(this.type = 'first');
-}
+template(true)(function() {
+  return apply({ type: 'first' });
+});
 
-template(this.type === 'first') {
+template(this.type === 'first')(function() {
   return apply({ type: 'second' });
-}
+});
 
-template(this.type === 'second') {
+template(this.type === 'second')(function() {
   return 'here am I';
-}
+});
 ```
 
 XJST is intended to be applied recursively to the same data, while making small
@@ -177,36 +166,16 @@ reverting them after the execution), but with small distinction - `apply`
 doesn't have a body, so it's just doing some changes to the data and applying
 template recursively (the context will be preserved).
 
-### Super apply
-
-```javascript
-template(this.page === 'home') {
-  // do something
-}
-```
-
-```javascript
-// second.xjst
-extends 'first'
-
-template(this.page === 'home') {
-  super apply(); // Will call "do something" in upper template
-}
-```
-
-Super call gives you an ability to pass execution into transformations that
-you're extending.
-
 ### Apply next
 
 ```javascript
-template(this.page === 'home' && this.action === 'login') {
+template(this.page === 'home' && this.action === 'login')(function() {
   // match here
-}
+});
 
-template(this.page === 'home') {
+template(this.page === 'home')(function() {
   applyNext();
-}
+});
 ```
 
 `applyNext()` call will reapply all templates, except one where it was called,
@@ -243,12 +212,12 @@ known context's state).
 Input:
 
 ```javascript
-template(this.type === 'a') {
+template(this.type === 'a')(function() {
   // body 1
-}
-template(this.type === 'b') {
+});
+template(this.type === 'b')(function() {
   // body 2
-}
+});
 ```
 
 Output (simplified):
