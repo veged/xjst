@@ -115,4 +115,15 @@ describe('XJST Compiler', function () {
       });
     }, {}, 'ok')
   });
+
+  it('should support oninit', function() {
+    run(function() {
+      oninit(function(exports) {
+        exports.stuff = 'ok';
+      });
+      template()(function() {
+        return exports.stuff;
+      });
+    }, {}, 'ok')
+  });
 });
