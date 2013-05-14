@@ -76,6 +76,10 @@ template(this.type === 'apply-next' && this.subtype === '1') {
   return 'ok';
 }
 
+template(this.type === 'apply-next' && this.subtype === '1') {
+  return applyNext();
+}
+
 template(this.type === 'apply-next') {
   return applyNext(this.subtype = '1');
 }
