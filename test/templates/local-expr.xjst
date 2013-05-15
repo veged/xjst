@@ -40,3 +40,8 @@ template(this.type === 'regr-1') {
     a: a + 1/2
   };
 }
+
+template(this.type === 'regr-2') {
+  var x, y;
+  return local(x = local(y = { a: 3, x: 1 }) y) x;
+}
