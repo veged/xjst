@@ -155,4 +155,19 @@ describe('XJST Compiler', function () {
       });
     }, { a: 'start' }, 'ok')
   });
+
+  it('should support applyNext with changes', function() {
+    run(function() {
+      template()(function() {
+        return 'oh noes!';
+      });
+      template(this.a === 'ok')(function() {
+        return 'ok';
+      });
+      template()(function() {
+        var x = 'ok';
+        return applyNext({ a: x });
+      });
+    }, {}, 'ok')
+  });
 });
