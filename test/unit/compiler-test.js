@@ -140,4 +140,19 @@ describe('XJST Compiler', function () {
       });
     }, {}, 'ok')
   });
+
+  it('should not account non-constant predicates', function() {
+    run(function() {
+      template()(function() {
+        return 'oh noes!';
+      });
+      template(this.a === 'ok')(function() {
+        return 'ok';
+      });
+      template(this.a === 'start')(function() {
+        var x = 'ok';
+        return apply({ a: x });
+      });
+    }, { a: 'start' }, 'ok')
+  });
 });
