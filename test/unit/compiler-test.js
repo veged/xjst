@@ -126,4 +126,18 @@ describe('XJST Compiler', function () {
       });
     }, {}, 'ok')
   });
+
+  it('should not run not-initialized code', function() {
+    run(function() {
+      oninit(function(exports) {
+        var apply = exports.apply;
+        exports.apply = function() {
+          return apply.call({ a: { b: 'ok' } });
+        };
+      });
+      template(this.a.b === 'ok')(function() {
+        return this.a.b;
+      });
+    }, {}, 'ok')
+  });
 });
