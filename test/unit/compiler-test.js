@@ -118,25 +118,11 @@ describe('XJST Compiler', function () {
 
   it('should support oninit', function() {
     run(function() {
-      xjst$oninit(function(exports) {
+      oninit(function(exports) {
         exports.stuff = 'ok';
       });
       template()(function() {
         return exports.stuff;
-      });
-    }, {}, 'ok')
-  });
-
-  it('should not run not-initialized code', function() {
-    run(function() {
-      xjst$oninit(function(exports) {
-        var apply = exports.apply;
-        exports.apply = function() {
-          return apply.call({ a: { b: 'ok' } });
-        };
-      });
-      template(this.a.b === 'ok')(function() {
-        return this.a.b;
       });
     }, {}, 'ok')
   });
