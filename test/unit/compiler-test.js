@@ -7,7 +7,7 @@ describe('XJST Compiler', function () {
 
     var runtime = xjst.compile(code, {
       optimize: false
-    }).apply.call(data || {});
+    }).apply(data || {});
     assert.deepEqual(runtime, expected);
 
     var optimized = xjst.compile(code).apply.call(data || {});
