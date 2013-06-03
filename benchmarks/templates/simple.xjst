@@ -1,11 +1,3 @@
-template (this.x === 1 && this.y === 3) {
-  return "ok";
-}
-
-template (this.x === 2 && this.y === 2) {
-  return "ok";
-}
-
-template (this.x === 1 && this.y === 2 && this.z === 3) {
-  return "ok";
-}
+template(this.x === 1, this.y === 3)('ok');
+template(this.x === 2, this.y === 2)('ok');
+template(this.x === 1, this.y === 2, this.z === 3)('ok');

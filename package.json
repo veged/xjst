@@ -26,12 +26,9 @@
     "estraverse": "~1.1.1"
   },
   "devDependencies": {
-    "benchmark": "0.3.x",
-    "cliff": "0.1.x",
-    "docco": "0.3.x",
-    "watch": "0.5.x",
-    "winston": "0.5.x",
-    "mocha": "~1.0.3"
+    "mocha": "~1.0.3",
+    "benchmark": "~1.0.0",
+    "watch": "~0.7.0"
   },
   "engines": {
     "node": ">=0.4.0"

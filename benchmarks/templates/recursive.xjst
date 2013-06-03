@@ -1,9 +1,13 @@
-template (this.type === 'list') {
+template(this.type === 'list')(function() {
   var self = this;
   return ['<ul>'].concat(this.items.map(function (item) {
-    return apply.call(item);
+    return apply({
+      type: item.type,
+      value: item.value
+    });
   }), ['</ul>']).join('');
-}
-template (this.type === 'item') {
+});
+
+template(this.type === 'item')(function() {
   return '<li>' + this.value + '</li>';
-}
+});
