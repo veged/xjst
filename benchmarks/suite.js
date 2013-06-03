@@ -45,7 +45,7 @@ exports.run = function(options) {
     });
 
     suite.on('cycle', function(event) {
-        console.log(String(event.target));
+      console.log(String(event.target));
     });
 
     suite.run();
