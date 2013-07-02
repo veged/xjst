@@ -4,4 +4,5 @@ benchmarks/templates/internal-*
 docs/
 v8.log
 *-private.*
+benchmarks/templates/internal-*
 TODO
