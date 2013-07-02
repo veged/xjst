@@ -3,4 +3,5 @@ node_modules/
 docs/
 v8.log
 *-private.*
+benchmarks/templates/internal-*
 TODO
