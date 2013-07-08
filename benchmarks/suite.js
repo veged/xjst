@@ -22,9 +22,9 @@ exports.run = function(options) {
       '   XX    XX        JJ     SS            TT    ',
       '    XX  XX         JJ     SS            TT    ',
       '     XXXX          JJ     SSSSSSS       TT    ',
-      '    XX XX          JJ          SS       TT    ',
-      '   XX   XX     JJ  JJ          SS       TT    ',
-      '  XX     XX    JJJJJJ     SSSSSSS       TT    ',
+      '    XX  XX         JJ          SS       TT    ',
+      '   XX    XX    JJ  JJ          SS       TT    ',
+      '  XX      XX   JJJJJJ     SSSSSSS       TT    ',
       '',
     ].join('\n'));
     console.log('              // benchmarks //');
