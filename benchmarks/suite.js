@@ -1,4 +1,5 @@
-var benchmark = require('benchmark'),
+var assert = require('assert'),
+    benchmark = require('benchmark'),
     Q = require('q'),
 
     templates = require('./templates'),
@@ -35,7 +36,10 @@ exports.run = function(options) {
           fn = render(template.xjst, 'benchmarks/' + name);
 
       // Throw exception if compiler was wrong
-      fn.call(template.data);
+      var res = fn.call(template.data);
+      if (template.html !== null) {
+        assert.equal(res + '\n', template.html);
+      }
 
       suite.add(name, function() {
         return fn.call(template.data);

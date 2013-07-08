@@ -10,6 +10,9 @@ function loadExt(filename, extension) {
         },
         json: function(content) {
           return JSON.parse(content);
+        },
+        html: function(content) {
+          return content;
         }
       },
       content;
@@ -35,6 +38,7 @@ exports.load = function(file) {
 
       template.xjst = loadExt(filename, 'xjst') || loadExt(filename, 'js');
       template.data = loadExt(filename, 'json') || {};
+      template.html = loadExt(filename, 'html') || null;
 
       templates[basename.replace(/-/g, ' ')] = template;
     });
