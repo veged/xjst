@@ -156,6 +156,22 @@ describe('XJST Compiler', function () {
     }, { a: 'start' }, 'ok')
   });
 
+  it('should handle maximum call-stack exceptions', function() {
+    try {
+      run(function() {
+        template(this.a === '2')(function() {
+          apply();
+        });
+        template(this.a === '1')(function() {
+          apply({ a: '2' });
+        });
+      }, { a: '1' }, 'no-way-this-could-happen');
+    } catch (e) {
+      assert(e.xjstContext);
+      assert.equal(e.xjstContext.a, 2);
+    }
+  });
+
   it('should support applyNext with changes', function() {
     run(function() {
       template()(function() {
