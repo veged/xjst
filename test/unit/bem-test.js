@@ -28,4 +28,10 @@ suite('BEM template', function () {
 
     assert.equal(rendered + '\n', expected);
   });
+
+  test('ignores global', function () {
+    assert.throws(function() {
+      common.render('bem-bl').apply.call();
+    });
+  });
 });
