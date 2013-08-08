@@ -13,6 +13,13 @@ describe('XJST Compiler', function () {
     var optimized = xjst.compile(code).apply.call(data || {});
 
     assert.deepEqual(runtime, optimized);
+
+    // Without beautifier
+    optimized = xjst.compile(code, {
+      beautify: false
+    }).apply.call(data || {});
+
+    assert.deepEqual(runtime, optimized);
   }
 
   it('should support all syntax', function() {
