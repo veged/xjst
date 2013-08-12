@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "coa": "~ 0.3.8",
-    "ometajs": "~ 3.3.2",
+    "ometajs": "~ 3.2.4",
     "q": "~ 0.8.10",
     "uglify-js": "1.3.x",
     "spoon": "~0.1.10"
