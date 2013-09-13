@@ -22,7 +22,7 @@ describe('Compiler.jailVars', function() {
   unit('local var and not-computed property', 'var x = 1;o.x',
        'var x__$0=1;o.x;');
   unit('function with local use', 'function a() {var x = 1; return x}',
-       'function a__$0(){var x=1;return x}');
+       'function a__$0(){var x__$1=1;return x__$1}');
   unit('function with outer use', 'var x = 1;function a() {return x}',
        'var x__$0=1;function a__$1(){return x__$0}');
 });
