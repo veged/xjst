@@ -31,20 +31,29 @@ exports.run = function(options) {
   }
 
   return templates.load(options.file).then(function(templates) {
-    var wait = Object.keys(templates).map(function (name) {
-      var template = templates[name],
-          fn = render(template.xjst, 'benchmarks/' + name);
+    Object.keys(templates).forEach(function (name) {
+      var template = templates[name];
+      var fns = {
+        xjst: template.xjst,
+        js: template.js
+      };
+      Object.keys(fns).forEach(function (type) {
+        if (!fns[type])
+          return;
+        var fn = render(fns[type], 'benchmarks/' + name + '.' + type);
 
-      // Throw exception if compiler was wrong
-      var res = fn.call(template.data);
-      if (template.html !== null) {
-        assert.equal(res + '\n', template.html);
-      }
+        // Throw exception if compiler was wrong
+        var res = fn.call(template.data);
+        if (template.html !== null) {
+          // assert.equal(res + '\n', template.html);
+        }
 
-      suite.add(name, function() {
-        return fn.call(template.data);
-      }, {
-        maxTime: options['max-time']
+        var data = JSON.stringify(template.data);
+        suite.add(name + '.' + type, function() {
+          return fn.call(JSON.parse(data));
+        }, {
+          maxTime: options['max-time']
+        });
       });
     });
 

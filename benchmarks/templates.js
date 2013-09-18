@@ -36,9 +36,16 @@ exports.load = function(file) {
       var basename = path.basename(filename),
           template = {};
 
-      template.xjst = loadExt(filename, 'xjst') || loadExt(filename, 'js');
+      template.js = loadExt(filename, 'js');
+      template.xjst = loadExt(filename, 'xjst');
       template.data = loadExt(filename, 'json') || {};
       template.html = loadExt(filename, 'html') || null;
+      try {
+        if (!template.html && template.js)
+          template.html = template.js.apply.call(template.data);
+      } catch (e) {
+        console.log(e);
+      }
 
       templates[basename.replace(/-/g, ' ')] = template;
     });
