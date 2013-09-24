@@ -1,0 +1,14 @@
+{
+    "title": "XJST",
+    "longTitle": "Extensible JavaScript Transformations",
+    "createDate": "02-11-2011",
+    "editDate": "10-05-2013",
+    "summary": "Extensible JavaScript Transformations (XJST) is a DSL for universal data transformations with compiler written on top of the node.js and ometajs and output code working in any browser or on server-side.",
+    "thumbnail": "",
+    "authors": ["indutny-fedor"],
+    "tags": ["tools"],
+    "categories": [{"name": "Templating engines/XJST", "url": "templating-engines/xjst", "order": "30/40"}],
+    "translators": [],
+    "url": "/doc/index/",
+    "type": "tools"
+}
