@@ -72,14 +72,18 @@ template(this.type === 'invalidating' && !this.sub) {
   return apply(this.sub = { s: 'x' });
 }
 
-template(this.type === 'apply-next' && this.subtype === '1') {
+template(this.type === 'apply-next') {
+  return 'oh noes!';
+}
+
+template(this.type === 'apply-next' && this.a === 'ok') {
   return 'ok';
 }
 
-template(this.type === 'apply-next' && this.subtype === '1') {
-  return applyNext();
+template(this.type === 'apply-next') {
+  return applyNext({ a: this.a === 'pre-ok' ? 'ok' : 'pre-ok' });
 }
 
-template(this.type === 'apply-next') {
-  return applyNext(this.subtype = '1');
+template(this.type === 'apply-next' && this.a === 'pre-ok') {
+  return applyNext();
 }
