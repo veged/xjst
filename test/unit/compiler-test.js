@@ -12,14 +12,14 @@ describe('XJST Compiler', function () {
 
     var optimized = xjst.compile(code).apply.call(data || {});
 
-    assert.deepEqual(runtime, optimized);
+    assert.deepEqual(optimized, expected);
 
     // Without beautifier
     optimized = xjst.compile(code, {
       beautify: false
     }).apply.call(data || {});
 
-    assert.deepEqual(runtime, optimized);
+    assert.deepEqual(optimized, expected);
   }
 
   it('should support all syntax', function() {
@@ -196,6 +196,9 @@ describe('XJST Compiler', function () {
 
   it('should reset applyNext flag after matching', function() {
     run(function() {
+      oninit(function(exports, xjst) {
+        exports.reset = xjst.resetApplyNext;
+      });
       template()(function() {
         return 'oh noes!';
       });
@@ -206,8 +209,82 @@ describe('XJST Compiler', function () {
         return applyNext({ a: this.a === 'pre-ok' ? 'ok' : 'pre-ok' });
       });
       template(this.a === 'pre-ok')(function() {
+        exports.reset(this);
         return applyNext();
       });
+    }, {}, 'ok')
+  });
+
+  it('should reset applyNext x 32', function() {
+    run(function() {
+      oninit(function(exports, xjst) {
+        exports.reset = xjst.resetApplyNext;
+      });
+      template()('ok');
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
+      template()(function() { return applyNext(); });
     }, {}, 'ok')
   });
 });
