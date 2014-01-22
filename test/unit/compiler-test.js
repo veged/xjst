@@ -217,9 +217,6 @@ describe('XJST Compiler', function () {
 
   it('should reset applyNext x 32', function() {
     run(function() {
-      oninit(function(exports, xjst) {
-        exports.reset = xjst.resetApplyNext;
-      });
       template()('ok');
       template()(function() { return applyNext(); });
       template()(function() { return applyNext(); });
