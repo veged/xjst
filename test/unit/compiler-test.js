@@ -284,4 +284,15 @@ describe('XJST Compiler', function () {
       template()(function() { return applyNext(); });
     }, {}, 'ok')
   });
+
+  it('should understand context local and fetch', function() {
+    run(function() {
+      template()(function() {
+        return __$$fetch('xkcd.dot');
+      });
+      template()(function() {
+        return local(null, { xkcd: {}, 'xkcd.dot': 'yes' })(applyNext());
+      });
+    }, {}, 'yes')
+  });
 });
