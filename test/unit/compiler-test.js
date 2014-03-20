@@ -287,11 +287,13 @@ describe('XJST Compiler', function () {
 
   it('should understand context local and fetch', function() {
     run(function() {
-      template()(function() {
+      template(function() { return __$$fetch('xkcd.dot') })(function() {
         return __$$fetch('xkcd.dot');
       });
       template()(function() {
-        return local(null, { xkcd: {}, 'xkcd.dot': 'yes' })(applyNext());
+        return local(null, { '$$global.xkcd': {}, '$$global.xkcd.dot': 'yes' })(
+          applyNext()
+        );
       });
     }, {}, 'yes')
   });
