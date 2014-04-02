@@ -89,7 +89,7 @@ fn({ your: 'data' });
 ## Syntax
 
 XJST extends JavaScript syntax with a following keywords: `template`, `local`,
-`apply`, `extends`, `super`.
+`apply`, `applyNext`.
 
 ### Template
 
