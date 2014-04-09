@@ -297,4 +297,14 @@ describe('XJST Compiler', function () {
       });
     }, {}, 'yes')
   });
+
+  it('should understand array/object literals', function() {
+    run(function() {
+      template()('yes');
+      template(this.a === 2)({ b: { a: 1 } });
+      template(this.a === 1)({ a: 1 });
+      template(this.a === 1)([ [ 1 ] ]);
+      template(this.a === 1)([ 1 ]);
+    }, {}, 'yes')
+  });
 });
