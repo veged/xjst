@@ -1,7 +1,7 @@
 {
   "name": "xjst",
   "description": "XSLT inspired JavaScript templates (with spices)",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "homepage": "http://github.com/veged/xjst",
   "author": "Sergey Berezhnoy <veged@mail.ru> (http://github.com/veged)",
   "contributors": [
