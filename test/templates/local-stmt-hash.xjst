@@ -1,0 +1,25 @@
+template(this.type === 'simple') {
+  var x = 1,
+      a = 0;
+  local(x = x + 2) {
+    a = x;
+  }
+
+  return {
+    x: x,
+    a: a
+  };
+}
+
+template(this.type === 'complex') {
+  var v = 0;
+
+  local({'a.b.c.d': 3}){
+    v = this.a.b.c.d;
+  }
+
+  return {
+    x: this.a.b.c.d,
+    a: v
+  };
+}
