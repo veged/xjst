@@ -3,7 +3,10 @@ var common = require('../fixtures/common'),
 
 function localTest(name, type) {
   return function() {
-    var result = common.render(name).apply.call({ type: type });
+    var result = common.render(name).apply.call({
+      type: type,
+      a: { b: { c: { d: 1 } } }
+    });
 
     assert.equal(result.a, 3);
     assert.equal(result.x, 1);
@@ -20,4 +23,6 @@ suite('Local expressions/statements', function () {
 
   test('simple statement', localTest('local-stmt', 'simple'));
   test('complex statement', localTest('local-stmt', 'complex'));
+  test('complex statement with hash-arg',
+       localTest('local-stmt-hash', 'complex'));
 });
