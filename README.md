@@ -9,10 +9,10 @@ XJST is a DSL for universal data transformations with compiler written on top of
 the [Node.js][1] and [Ometa/JS][2] and output code working in any browser or on
 server-side.
 
-## Data Transformations?
+## Data transformations?
 
-Yes, traverse any data in specific flow using matching against conditions' set
-to generate any output (see [binary tree prefixer][6] for example).
+Yes, traverse any data in specific flow using matching against conditions set
+to generate any output (see [binary tree prefixer][6]).
 
 For example, XJST can be used as:
 
@@ -27,8 +27,8 @@ XJST makes possible to extend your previous transformation by overriding or
 specializing some of it's parts (example below is extending
 `this.url === '/login'` condition with redirection for logged in users).
 
-XJST is a superset of JavaScript so you can use any popular libraries (i.e.
-jquery or underscore) within your transformation and write condition's bodies in
+XJST is a superset of JavaScript so you can use any popular libraries (that is
+jquery or underscore) within your transformation and write condition bodies in
 JavaScript.
 
 Creating your own DSL based on XJST is also possible, because it's syntax parser
@@ -105,8 +105,8 @@ the bottom to the top.
 
 There're few restrictions for templates:
 
-*   Expressions in template's predicate should have no side-effects
-    (i.e. should not change transformation context).
+*   Expressions in template predicate should have no side-effects
+    (that is should not change transformation context).
 
 *   It's preferred to use function calls or equality comparisons joined by
     logical `&&` operator for expressions, as it can be better optimized at
@@ -205,9 +205,9 @@ $ bin/xjst -i template.xjst
 ![Optimized graph][7]
 
 XJST takes all the `template` statements and produces a tree with comparisons in
-nodes and `template`'s bodies in leafs. `apply` are handled and replaced by
-direct calls to the tree's nodes (some of comparisons can be skipped, using
-known context's state).
+nodes and `template` bodies in leafs. `apply` are handled and replaced by
+direct calls to the tree nodes (some of comparisons can be skipped, using
+known context state).
 
 Input:
 
