@@ -307,4 +307,14 @@ describe('XJST Compiler', function () {
       template(this.a === 1)([ 1 ]);
     }, {}, 'yes')
   });
+
+  it('should support dashed properties in local', function() {
+    run(function() {
+      template()(function() {
+        return local({ 'dashed-prop': 'ok' })(function() {
+          return this['dashed-prop'];
+        });
+      });
+    }, {}, 'ok');
+  });
 });
