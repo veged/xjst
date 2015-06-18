@@ -317,4 +317,11 @@ describe('XJST Compiler', function () {
       });
     }, {}, 'ok');
   });
+
+  it('should sanitize this in binary === predicates', function() {
+    run(function() {
+      template()('boom');
+      template(function () {return this.ctx.content === undefined})('ok');
+    }, {ctx: {content: undefined}}, 'ok');
+  });
 });
