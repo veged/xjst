@@ -324,4 +324,14 @@ describe('XJST Compiler', function () {
       template(function () {return this.ctx.content === undefined})('ok');
     }, {ctx: {content: undefined}}, 'ok');
   });
+
+  it('should throw on failed match', function() {
+    assert.throws(function() {
+      run(function() {
+        template(this.a === 1)(function() {
+          return 'ok';
+        });
+      }, { a: 2 }, 'ok');
+    });
+  });
 });
