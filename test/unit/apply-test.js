@@ -33,4 +33,9 @@ suite('XJST', function() {
       'resetApplyNext keyword',
       applyTest('reset-apply-next', 'who cares')
   );
+
+  test(
+      'resetApplyNext keyword (no flags)',
+      applyTest('reset-apply-next-no-flags', 'who cares')
+  );
 });
