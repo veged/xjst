@@ -28,4 +28,9 @@ suite('XJST', function() {
       'applyNext keyword',
        applyTest('apply', 'apply-next')
   );
+
+  test(
+      'resetApplyNext keyword',
+      applyTest('reset-apply-next', 'who cares')
+  );
 });
