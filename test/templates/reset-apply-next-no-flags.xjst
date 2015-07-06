@@ -1,0 +1,5 @@
+template(true) {
+  // Should not throw
+  resetApplyNext();
+  return 'ok';
+}
