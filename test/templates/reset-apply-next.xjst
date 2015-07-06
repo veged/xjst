@@ -1,0 +1,16 @@
+template(true) {
+  return 'oh noes!';
+}
+
+template(this.a === 'ok') {
+  return 'ok';
+}
+
+template(true) {
+  return applyNext({ a: this.a === 'pre-ok' ? 'ok' : 'pre-ok' });
+}
+
+template(this.a === 'pre-ok') {
+  resetApplyNext();
+  return applyNext();
+}
