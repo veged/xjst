@@ -1,0 +1,3 @@
+template(true)(function () {
+    return 'It works!';
+});
