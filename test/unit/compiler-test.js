@@ -215,6 +215,28 @@ describe('XJST Compiler', function () {
     }, {}, 'ok')
   });
 
+  it('should skip applyNext flag after matching', function() {
+    run(function() {
+      oninit(function(exports, xjst) {
+        exports.skip = xjst.skipApplyNext;
+      });
+      template()(function() {
+        return 'oh noes!';
+      });
+      template(this.a === 'ok')(function() {
+        return 'ok';
+      });
+      template()(function() {
+        return applyNext({ a: this.a === 'pre-ok' ? 'ok' : 'pre-ok' });
+      });
+      template(this.a === 'pre-ok')(function() {
+        return exports.skip(this, function() {
+          return applyNext();
+        });
+      });
+    }, {}, 'ok')
+  });
+
   it('should reset applyNext x 32', function() {
     run(function() {
       template()('ok');
